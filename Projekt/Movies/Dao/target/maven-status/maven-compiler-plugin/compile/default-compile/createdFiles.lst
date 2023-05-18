@@ -1,0 +1,14 @@
+hr\algebra\models\AppUser.class
+hr\algebra\models\Movie.class
+hr\algebra\dal\Repository.class
+hr\algebra\dal\RepositoryFactory.class
+hr\algebra\dal\sql\DataSourceSingleton.class
+hr\algebra\dal\sql\ActorRepository.class
+hr\algebra\dal\sql\DirectorRepository.class
+hr\algebra\dal\sql\MovieRepository.class
+hr\algebra\models\Director.class
+hr\algebra\models\MovieActor.class
+hr\algebra\dal\sql\UserRepository.class
+hr\algebra\models\enums\RepoType.class
+hr\algebra\models\MovieDirector.class
+hr\algebra\models\Actor.class
