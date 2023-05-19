@@ -10,6 +10,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -158,7 +159,7 @@ public class MovieRepository implements Repository<Movie> {
                             rs.getString(TYPE_OF_MOVIE),
                             rs.getString(LINK),
                             rs.getString(RESERVATION),
-                            LocalDateTime.parse(rs.getString(DATE_OF_DISPLAY), Movie.DATE_FORMATTER),
+                            LocalDate.parse(rs.getString(DATE_OF_DISPLAY), Movie.DATE_FORMATTER),
                             rs.getInt(SORT),
                             rs.getString(TRAILER)
                     ));
@@ -190,7 +191,7 @@ public class MovieRepository implements Repository<Movie> {
                         rs.getString(TYPE_OF_MOVIE),
                         rs.getString(LINK),
                         rs.getString(RESERVATION),
-                        LocalDateTime.parse(rs.getString(DATE_OF_DISPLAY), Movie.DATE_FORMATTER),
+                        LocalDate.parse(rs.getString(DATE_OF_DISPLAY), Movie.DATE_FORMATTER),
                         rs.getInt(SORT),
                         rs.getString(TRAILER)
                 ));

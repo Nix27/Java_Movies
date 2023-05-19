@@ -13,6 +13,9 @@ public class Actor {
     private String FirstName;
     private String LastName;
 
+    public Actor() {
+    }
+
     public Actor(String FirstName, String LastName) {
         this.FirstName = FirstName;
         this.LastName = LastName;

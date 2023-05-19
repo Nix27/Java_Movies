@@ -9,9 +9,13 @@ package hr.algebra.models;
  * @author Nix
  */
 public class Director {
+
     private int id;
     private String FirstName;
     private String LastName;
+
+    public Director() {
+    }
 
     public Director(String FirstName, String LastName) {
         this.FirstName = FirstName;
