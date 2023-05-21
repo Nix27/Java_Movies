@@ -4,6 +4,8 @@
  */
 package hr.algebra.models;
 
+import java.util.Objects;
+
 /**
  *
  * @author Nix

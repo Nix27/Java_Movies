@@ -19,11 +19,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
-import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.stream.XMLEventReader;
@@ -41,71 +41,72 @@ public class MovieParser {
 
     private MovieParser() {
     }
-    
+
     private static final String RSS_URL = "https://www.blitz-cinestar-bh.ba/rss.aspx?id=2682";
     private static final String ATTRIBUTE_URL = "url";
     private static final String EXT = ".jpg";
     private static final String DIR = "assets";
-    
-    public static List<MovieVM> parse() throws IOException, XMLStreamException{
-        List<MovieVM> movies = new ArrayList<>();
-        
+
+    public static Set<MovieVM> parse() throws IOException, XMLStreamException {
+        Set<MovieVM> movies = new HashSet<>();
+
         HttpURLConnection conn = UrlConnectionFactory.getHttpUrlConnection(RSS_URL);
-        
-        try(InputStream is = conn.getInputStream();){
+
+        try (InputStream is = conn.getInputStream();) {
             XMLEventReader reader = ParserFactory.createStaxParser(is);
-            
+
             MovieVM movie = null;
             Optional<TagType> tagType = Optional.empty();
             StartElement startElement = null;
-            
-            while(reader.hasNext()){
+
+            while (reader.hasNext()) {
                 XMLEvent event = reader.nextEvent();
-                
+
                 switch (event.getEventType()) {
                     case XMLStreamConstants.START_ELEMENT -> {
                         startElement = event.asStartElement();
                         String qName = startElement.getName().getLocalPart();
                         tagType = TagType.from(qName);
-                        
-                        if(tagType.isPresent() && tagType.get().equals(TagType.ITEM)){
+
+                        if (tagType.isPresent() && tagType.get().equals(TagType.ITEM)) {
                             movie = new MovieVM(
-                             new Movie(),
-                             new ArrayList<>(),
-                             new ArrayList<>()
+                                    new Movie(),
+                                    new ArrayList<>(),
+                                    new ArrayList<>()
                             );
                             movies.add(movie);
                         }
                     }
                     case XMLStreamConstants.CHARACTERS -> {
-                        if(tagType.isPresent() && movie != null){
+                        if (tagType.isPresent() && movie != null) {
                             Characters characters = event.asCharacters();
                             String data = characters.getData().trim();
-                            
+
                             switch (tagType.get()) {
                                 case TITLE:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         movie.getMovie().setTitle(data);
                                     }
                                     break;
                                 case PUB_DATE:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         LocalDateTime publishedDate = LocalDateTime.parse(data, DateTimeFormatter.RFC_1123_DATE_TIME);
                                         movie.getMovie().setPublishedDate(publishedDate);
                                     }
                                     break;
                                 case DESCRIPTION:
-                                    if(!data.isEmpty()){
-                                        movie.getMovie().setDescription(data);
+                                    if (!data.isEmpty()) {
+                                        String text = getTextFromData(data);
+                                        movie.getMovie().setDescription(text);
                                     }
                                     break;
                                 case ORIGINAL_NAME:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         movie.getMovie().setOriginalTitle(data);
                                     }
                                     break;
                                 case REDATELJ:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         List<Director> directors = getDirectorsFromData(data);
                                         for (Director director : directors) {
                                             movie.getDirectors().add(director);
@@ -113,7 +114,7 @@ public class MovieParser {
                                     }
                                     break;
                                 case GLUMCI:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         List<Actor> actors = getActorsFromData(data);
                                         for (Actor actor : actors) {
                                             movie.getActors().add(actor);
@@ -121,17 +122,17 @@ public class MovieParser {
                                     }
                                     break;
                                 case TRAJANJE:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         movie.getMovie().setDuration(Integer.parseInt(data));
                                     }
                                     break;
                                 case GODINA:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         movie.getMovie().setYearOfRelease(Integer.parseInt(data));
                                     }
                                     break;
                                 case ZANR:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         movie.getMovie().setGenre(data);
                                     }
                                     break;
@@ -141,33 +142,33 @@ public class MovieParser {
                                     }
                                     break;
                                 case VRSTA:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         movie.getMovie().setTypeOfMovie(data);
                                     }
                                     break;
                                 case LINK:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         movie.getMovie().setLink(data);
                                     }
                                     break;
                                 case REZERVACIJA:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         movie.getMovie().setReservation(data);
                                     }
                                     break;
                                 case DATUM_PRIKAZIVANJA:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         LocalDate dateOfDisplay = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
                                         movie.getMovie().setDateOfDisplay(dateOfDisplay);
                                     }
                                     break;
                                 case SORT:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         movie.getMovie().setSort(Integer.parseInt(data));
                                     }
                                     break;
                                 case TRAILER:
-                                    if(!data.isEmpty()){
+                                    if (!data.isEmpty()) {
                                         movie.getMovie().setTrailer(data);
                                     }
                                     break;
@@ -177,11 +178,11 @@ public class MovieParser {
                 }
             }
         }
-        
+
         return movies;
     }
-    
-    private enum TagType{
+
+    private enum TagType {
         ITEM("item"),
         TITLE("title"),
         PUB_DATE("pubDate"),
@@ -198,66 +199,88 @@ public class MovieParser {
         REZERVACIJA("rezervacija"),
         DATUM_PRIKAZIVANJA("datumprikazivanja"),
         SORT("sort"),
-        TRAILER("trailer")
-        ;
-        
+        TRAILER("trailer");
+
         private final String name;
 
         private TagType(String name) {
             this.name = name;
         }
-        
-        private static Optional<TagType> from(String name){
+
+        private static Optional<TagType> from(String name) {
             for (TagType value : values()) {
-                if(value.name.equals(name)){
+                if (value.name.equals(name)) {
                     return Optional.of(value);
                 }
             }
-            
+
             return Optional.empty();
         }
     }
-    
+
+    private static String getTextFromData(String data) {
+        StringBuilder sb = new StringBuilder();
+        boolean isText = false;
+
+        for (char c : data.toCharArray()) {
+            if (c == '<') {
+                isText = false;
+                continue;
+            }
+
+            if (c == '>') {
+                isText = true;
+                continue;
+            }
+
+            if (isText) {
+                sb.append(c);
+            }
+        }
+
+        return sb.toString();
+    }
+
     private static void handlePicture(Movie movie, String data) {
         try {
             String ext = data.substring(data.lastIndexOf("."));
-            
-            if(ext.length() > 4){
+
+            if (ext.length() > 4) {
                 ext = EXT;
             }
-            
+
             String pictureName = UUID.randomUUID() + ext;
             String localPicturePath = DIR + File.separator + pictureName;
-            
+
             FileUtils.copyFromUrl(data, localPicturePath);
-            
+
             movie.setPoster(localPicturePath);
         } catch (IOException ex) {
             Logger.getLogger(MovieParser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private static List<Director> getDirectorsFromData(String data) {
         List<Director> directors = new ArrayList<>();
-        
+
         String[] directorsData = data.split(",");
         for (String directorData : directorsData) {
             String[] firstAndLastName = directorData.trim().split(" ", 2);
             directors.add(new Director(firstAndLastName[0], firstAndLastName[1]));
         }
-        
+
         return directors;
     }
-    
+
     private static List<Actor> getActorsFromData(String data) {
         List<Actor> actors = new ArrayList<>();
-        
+
         String[] actorsData = data.split(",");
         for (String actorData : actorsData) {
             String[] firstAndLastName = actorData.trim().split(" ", 2);
             actors.add(new Actor(firstAndLastName[0], firstAndLastName[1]));
         }
-        
+
         return actors;
     }
 }

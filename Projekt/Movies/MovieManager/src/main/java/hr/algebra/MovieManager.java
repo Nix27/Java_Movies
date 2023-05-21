@@ -8,6 +8,7 @@ import hr.algebra.parsers.rss.MovieParser;
 import hr.algebra.view.models.MovieVM;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.stream.XMLStreamException;
@@ -67,7 +68,7 @@ public class MovieManager extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            List<MovieVM> movies = MovieParser.parse();
+            Set<MovieVM> movies = MovieParser.parse();
         } catch (IOException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (XMLStreamException ex) {
