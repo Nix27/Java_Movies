@@ -8,6 +8,7 @@ import hr.algebra.models.Actor;
 import hr.algebra.models.Director;
 import hr.algebra.models.Movie;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -49,5 +50,27 @@ public class MovieVM {
 
     public void setActors(List<Actor> actors) {
         this.actors = actors;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + Objects.hashCode(this.movie);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MovieVM other = (MovieVM) obj;
+        return Objects.equals(this.movie, other.movie);
     }
 }

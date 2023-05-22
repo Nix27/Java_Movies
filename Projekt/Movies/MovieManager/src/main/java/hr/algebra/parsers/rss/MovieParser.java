@@ -74,7 +74,6 @@ public class MovieParser {
                                     new ArrayList<>(),
                                     new ArrayList<>()
                             );
-                            movies.add(movie);
                         }
                     }
                     case XMLStreamConstants.CHARACTERS -> {
@@ -171,6 +170,7 @@ public class MovieParser {
                                     if (!data.isEmpty()) {
                                         movie.getMovie().setTrailer(data);
                                     }
+                                    movies.add(movie);
                                     break;
                             }
                         }
@@ -221,13 +221,17 @@ public class MovieParser {
     private static String getTextFromData(String data) {
         StringBuilder sb = new StringBuilder();
         boolean isText = false;
-
-        for (char c : data.toCharArray()) {
+        
+        for(int i = 0; i < data.length(); i++){
+            char c = data.charAt(i);
+            
             if (c == '<') {
+                if(data.charAt(i + 1) == 'a') break;
+                
                 isText = false;
                 continue;
             }
-
+            
             if (c == '>') {
                 isText = true;
                 continue;

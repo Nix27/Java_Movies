@@ -69,9 +69,7 @@ public class MovieManager extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             Set<MovieVM> movies = MovieParser.parse();
-        } catch (IOException ex) {
-            Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (XMLStreamException ex) {
+        } catch (IOException | XMLStreamException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
