@@ -23,6 +23,6 @@
     <properties>
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
-        <exec.mainClass>hr.algebra.MovieManager</exec.mainClass>
+        <exec.mainClass>hr.algebra.LoginRegisterDialog</exec.mainClass>
     </properties>
 </project>

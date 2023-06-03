@@ -4,6 +4,7 @@
  */
 package hr.algebra.dal;
 
+import hr.algebra.models.AppUser;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +19,8 @@ public interface Repository<T> {
     void delete(int id) throws Exception;
     Optional<T> selectSingle(int id) throws Exception;
     List<T> selectAll() throws Exception;
+    
+    default Optional<String> authenticate(String username, String password) throws Exception {
+        return Optional.empty();
+    }
 }

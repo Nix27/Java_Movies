@@ -1,11 +1,23 @@
-CREATE PROCEDURE createUser
+CREATE or alter PROCEDURE createUser
 	@Username NVARCHAR(100),
 	@Password NVARCHAR(100),
+	@Role NVARCHAR(100),
 	@IDUser INT OUTPUT
 AS 
 BEGIN 
-	INSERT INTO AppUser (Username, Password, Role) VALUES(@Username, @Password, 'User')
+	INSERT INTO AppUser (Username, Password, Role) VALUES(@Username, @Password, @Role)
 	SET @IDUser = SCOPE_IDENTITY()
+END
+
+GO
+
+CREATE or alter PROCEDURE authenticateUser
+	@Username NVARCHAR(100),
+	@Password NVARCHAR(100)
+AS 
+BEGIN 
+	select * from AppUser
+	where Username = @Username and Password = @Password
 END
 
 GO

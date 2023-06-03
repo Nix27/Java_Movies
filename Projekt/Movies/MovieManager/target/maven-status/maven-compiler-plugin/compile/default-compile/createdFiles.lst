@@ -1,7 +1,14 @@
-hr\algebra\MovieManager$2.class
 hr\algebra\view\models\MovieVM.class
+hr\algebra\LoginRegisterDialog.class
+hr\algebra\views\appentrance\Register$2.class
+hr\algebra\views\appentrance\Register.class
+hr\algebra\LoginRegisterDialog$1$1.class
+hr\algebra\MovieManager$2.class
 hr\algebra\parsers\rss\MovieParser$TagType.class
+hr\algebra\LoginRegisterDialog$1.class
+hr\algebra\views\appentrance\Register$1.class
 hr\algebra\parsers\rss\MovieParser$1.class
 hr\algebra\parsers\rss\MovieParser.class
+hr\algebra\views\appentrance\Login.class
 hr\algebra\MovieManager$1.class
 hr\algebra\MovieManager.class
