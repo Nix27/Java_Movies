@@ -113,7 +113,7 @@ public class DirectorRepository implements Repository<Director> {
 
         DataSource dataSource = DataSourceSingleton.getInstance();
 
-        try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(SELECT_DIRECTOR); ResultSet rs = stmt.executeQuery();) {
+        try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(SELECT_DIRECTORS); ResultSet rs = stmt.executeQuery();) {
             while (rs.next()) {
                 directors.add(new Director(
                         rs.getInt(ID_DIRECTOR),

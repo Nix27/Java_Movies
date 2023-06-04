@@ -4,6 +4,7 @@
  */
 package hr.algebra.views.appentrance;
 
+import hr.algebra.AdminApp;
 import hr.algebra.MovieManager;
 import hr.algebra.dal.Repository;
 import hr.algebra.dal.RepositoryFactory;
@@ -16,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
@@ -161,7 +161,7 @@ public class Login extends javax.swing.JPanel {
                 
                 parent.dispose();
                 
-                new MovieManager().setVisible(true);
+                new AdminApp().setVisible(true);
             }else{
                 lbWrongData.setVisible(true);
             }

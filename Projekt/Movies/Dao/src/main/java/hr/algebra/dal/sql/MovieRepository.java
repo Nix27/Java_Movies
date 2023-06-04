@@ -141,7 +141,7 @@ public class MovieRepository implements Repository<Movie> {
     public Optional<Movie> selectSingle(int id) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
 
-        try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(DELETE_MOVIE);) {
+        try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(SELECT_MOVIE);) {
             stmt.setInt(ID_MOVIE, id);
 
             try (ResultSet rs = stmt.executeQuery();) {
@@ -176,7 +176,7 @@ public class MovieRepository implements Repository<Movie> {
 
         DataSource dataSource = DataSourceSingleton.getInstance();
 
-        try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(DELETE_MOVIE); ResultSet rs = stmt.executeQuery();) {
+        try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(SELECT_MOVIES); ResultSet rs = stmt.executeQuery();) {
             while (rs.next()) {
                 movies.add(new Movie(
                         rs.getInt(ID_MOVIE),

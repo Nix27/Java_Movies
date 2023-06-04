@@ -7,6 +7,8 @@ package hr.algebra.models;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -32,6 +34,8 @@ public class Movie {
     private LocalDate dateOfDisplay;
     private int sort;
     private String trailer;
+    private List<Director> directors = new ArrayList<>();
+    private List<Actor> actors = new ArrayList<>();
 
     public Movie() {
     }
@@ -176,6 +180,22 @@ public class Movie {
 
     public void setTrailer(String trailer) {
         this.trailer = trailer;
+    }
+
+    public List<Director> getDirectors() {
+        return directors;
+    }
+
+    public void setDirectors(List<Director> directors) {
+        this.directors = directors;
+    }
+
+    public List<Actor> getActors() {
+        return actors;
+    }
+
+    public void setActors(List<Actor> actors) {
+        this.actors = actors;
     }
 
     @Override

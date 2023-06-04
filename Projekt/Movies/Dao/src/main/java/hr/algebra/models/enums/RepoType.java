@@ -6,6 +6,8 @@ package hr.algebra.models.enums;
 
 import hr.algebra.dal.sql.ActorRepository;
 import hr.algebra.dal.sql.DirectorRepository;
+import hr.algebra.dal.sql.MovieActorRepository;
+import hr.algebra.dal.sql.MovieDirectorRepository;
 import hr.algebra.dal.sql.MovieRepository;
 import hr.algebra.dal.sql.UserRepository;
 
@@ -17,7 +19,9 @@ public enum RepoType {
     USER(UserRepository.class.toString()),
     DIRECTOR(DirectorRepository.class.toString()),
     ACTOR(ActorRepository.class.toString()),
-    MOVIE(MovieRepository.class.toString());
+    MOVIE(MovieRepository.class.toString()),
+    MOVIE_DIRECTOR(MovieDirectorRepository.class.toString()),
+    MOVIE_ACTOR(MovieActorRepository.class.toString());
 
     private final String className;
 

@@ -51,4 +51,30 @@ public class Actor {
     public void setLastName(String LastName) {
         this.LastName = LastName;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + Objects.hashCode(this.FirstName);
+        hash = 53 * hash + Objects.hashCode(this.LastName);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Actor other = (Actor) obj;
+        if (!Objects.equals(this.FirstName, other.FirstName)) {
+            return false;
+        }
+        return Objects.equals(this.LastName, other.LastName);
+    }
 }

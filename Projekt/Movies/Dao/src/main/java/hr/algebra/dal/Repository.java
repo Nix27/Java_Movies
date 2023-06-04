@@ -4,9 +4,9 @@
  */
 package hr.algebra.dal;
 
-import hr.algebra.models.AppUser;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  *

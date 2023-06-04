@@ -4,8 +4,10 @@
  */
 package hr.algebra;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
 import hr.algebra.views.appentrance.Login;
 import hr.algebra.views.appentrance.Register;
+import javax.swing.UIManager;
 
 /**
  *
@@ -15,7 +17,7 @@ public class LoginRegisterDialog extends javax.swing.JDialog {
 
     private final static String LOGIN = "Log in";
     private final static String REGISTER = "Register";
-    
+
     /**
      * Creates new form LoginRegisterDialog
      */
@@ -64,21 +66,12 @@ public class LoginRegisterDialog extends javax.swing.JDialog {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginRegisterDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginRegisterDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginRegisterDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginRegisterDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            UIManager.setLookAndFeel(new FlatDarculaLaf());
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize LaF");
         }
+        //</editor-fold>
+
         //</editor-fold>
 
         /* Create and display the dialog */

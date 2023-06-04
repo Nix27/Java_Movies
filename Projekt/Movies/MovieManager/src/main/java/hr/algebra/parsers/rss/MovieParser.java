@@ -10,7 +10,6 @@ import hr.algebra.models.Actor;
 import hr.algebra.models.Movie;
 import hr.algebra.models.Director;
 import hr.algebra.utilities.FileUtils;
-import hr.algebra.view.models.MovieVM;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,15 +46,15 @@ public class MovieParser {
     private static final String EXT = ".jpg";
     private static final String DIR = "assets";
 
-    public static Set<MovieVM> parse() throws IOException, XMLStreamException {
-        Set<MovieVM> movies = new HashSet<>();
+    public static Set<Movie> parse() throws IOException, XMLStreamException {
+        Set<Movie> movies = new HashSet<>();
 
         HttpURLConnection conn = UrlConnectionFactory.getHttpUrlConnection(RSS_URL);
 
         try (InputStream is = conn.getInputStream();) {
             XMLEventReader reader = ParserFactory.createStaxParser(is);
 
-            MovieVM movie = null;
+            Movie movie = null;
             Optional<TagType> tagType = Optional.empty();
             StartElement startElement = null;
 
@@ -69,11 +68,7 @@ public class MovieParser {
                         tagType = TagType.from(qName);
 
                         if (tagType.isPresent() && tagType.get().equals(TagType.ITEM)) {
-                            movie = new MovieVM(
-                                    new Movie(),
-                                    new ArrayList<>(),
-                                    new ArrayList<>()
-                            );
+                            movie = new Movie();
                         }
                     }
                     case XMLStreamConstants.CHARACTERS -> {
@@ -84,24 +79,24 @@ public class MovieParser {
                             switch (tagType.get()) {
                                 case TITLE:
                                     if (!data.isEmpty()) {
-                                        movie.getMovie().setTitle(data);
+                                        movie.setTitle(data);
                                     }
                                     break;
                                 case PUB_DATE:
                                     if (!data.isEmpty()) {
                                         LocalDateTime publishedDate = LocalDateTime.parse(data, DateTimeFormatter.RFC_1123_DATE_TIME);
-                                        movie.getMovie().setPublishedDate(publishedDate);
+                                        movie.setPublishedDate(publishedDate);
                                     }
                                     break;
                                 case DESCRIPTION:
                                     if (!data.isEmpty()) {
                                         String text = getTextFromData(data);
-                                        movie.getMovie().setDescription(text);
+                                        movie.setDescription(text);
                                     }
                                     break;
                                 case ORIGINAL_NAME:
                                     if (!data.isEmpty()) {
-                                        movie.getMovie().setOriginalTitle(data);
+                                        movie.setOriginalTitle(data);
                                     }
                                     break;
                                 case REDATELJ:
@@ -122,53 +117,53 @@ public class MovieParser {
                                     break;
                                 case TRAJANJE:
                                     if (!data.isEmpty()) {
-                                        movie.getMovie().setDuration(Integer.parseInt(data));
+                                        movie.setDuration(Integer.parseInt(data));
                                     }
                                     break;
                                 case GODINA:
                                     if (!data.isEmpty()) {
-                                        movie.getMovie().setYearOfRelease(Integer.parseInt(data));
+                                        movie.setYearOfRelease(Integer.parseInt(data));
                                     }
                                     break;
                                 case ZANR:
                                     if (!data.isEmpty()) {
-                                        movie.getMovie().setGenre(data);
+                                        movie.setGenre(data);
                                     }
                                     break;
                                 case PLAKAT:
-                                    if (!data.isEmpty() && startElement != null && movie.getMovie().getPoster() == null) {
-                                        handlePicture(movie.getMovie(), data);
+                                    if (!data.isEmpty() && startElement != null && movie.getPoster() == null) {
+                                        handlePicture(movie, data);
                                     }
                                     break;
                                 case VRSTA:
                                     if (!data.isEmpty()) {
-                                        movie.getMovie().setTypeOfMovie(data);
+                                        movie.setTypeOfMovie(data);
                                     }
                                     break;
                                 case LINK:
                                     if (!data.isEmpty()) {
-                                        movie.getMovie().setLink(data);
+                                        movie.setLink(data);
                                     }
                                     break;
                                 case REZERVACIJA:
                                     if (!data.isEmpty()) {
-                                        movie.getMovie().setReservation(data);
+                                        movie.setReservation(data);
                                     }
                                     break;
                                 case DATUM_PRIKAZIVANJA:
                                     if (!data.isEmpty()) {
                                         LocalDate dateOfDisplay = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-                                        movie.getMovie().setDateOfDisplay(dateOfDisplay);
+                                        movie.setDateOfDisplay(dateOfDisplay);
                                     }
                                     break;
                                 case SORT:
                                     if (!data.isEmpty()) {
-                                        movie.getMovie().setSort(Integer.parseInt(data));
+                                        movie.setSort(Integer.parseInt(data));
                                     }
                                     break;
                                 case TRAILER:
                                     if (!data.isEmpty()) {
-                                        movie.getMovie().setTrailer(data);
+                                        movie.setTrailer(data);
                                     }
                                     movies.add(movie);
                                     break;

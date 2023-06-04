@@ -4,8 +4,8 @@
  */
 package hr.algebra;
 
+import hr.algebra.models.Movie;
 import hr.algebra.parsers.rss.MovieParser;
-import hr.algebra.view.models.MovieVM;
 import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Level;
@@ -67,7 +67,7 @@ public class MovieManager extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            Set<MovieVM> movies = MovieParser.parse();
+            Set<Movie> movies = MovieParser.parse();
         } catch (IOException | XMLStreamException ex) {
             Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
         }
