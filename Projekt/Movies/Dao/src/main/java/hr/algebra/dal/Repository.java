@@ -20,7 +20,5 @@ public interface Repository<T> {
     Optional<T> selectSingle(int id) throws Exception;
     List<T> selectAll() throws Exception;
     
-    default Optional<String> authenticate(String username, String password) throws Exception {
-        return Optional.empty();
-    }
+    default void deleteAll() throws Exception {}
 }

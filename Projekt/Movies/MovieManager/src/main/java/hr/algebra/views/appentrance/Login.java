@@ -5,16 +5,21 @@
 package hr.algebra.views.appentrance;
 
 import hr.algebra.AdminApp;
-import hr.algebra.MovieManager;
 import hr.algebra.dal.Repository;
 import hr.algebra.dal.RepositoryFactory;
+import hr.algebra.dal.sql.DataSourceSingleton;
+import hr.algebra.interfaces.Authenticable;
 import hr.algebra.models.AppUser;
 import hr.algebra.models.enums.RepoType;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sql.DataSource;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
@@ -24,7 +29,7 @@ import javax.swing.text.JTextComponent;
  *
  * @author Nix
  */
-public class Login extends javax.swing.JPanel {
+public class Login extends javax.swing.JPanel implements Authenticable{
 
     private List<JTextComponent> validationFields;
     private List<JLabel> errorLabels;
@@ -151,7 +156,7 @@ public class Login extends javax.swing.JPanel {
         if(!formValid()) return;
         
         try {
-            Optional<String> optUserRole = repository.authenticate(
+            Optional<String> optUserRole = authenticate(
                     tfUsername.getText().trim(),
                     new String(pfPassword.getPassword()));
             
@@ -168,8 +173,6 @@ public class Login extends javax.swing.JPanel {
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
     }//GEN-LAST:event_btnLogInActionPerformed
 
 
@@ -223,5 +226,29 @@ public class Login extends javax.swing.JPanel {
         }
         
         return ok;
+    }
+
+    private final String USERNAME = "Username";
+    private final String PASSWORD = "Password";
+    private final String ROLE = "Role";
+    private final String AUTHENTICATE_USER = "{ CALL authenticateUser (?,?) }";
+    
+    @Override
+    public Optional<String> authenticate(String username, String password) throws Exception {
+        DataSource dataSource = DataSourceSingleton.getInstance();
+
+        try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(AUTHENTICATE_USER);) {
+            stmt.setString(USERNAME, username);
+            stmt.setString(PASSWORD, password);
+            try (ResultSet rs = stmt.executeQuery();) {
+                if (rs.next()) {
+                    return Optional.of(
+                            rs.getString(ROLE)
+                    );
+                }
+            }
+        }
+
+        return Optional.empty();
     }
 }

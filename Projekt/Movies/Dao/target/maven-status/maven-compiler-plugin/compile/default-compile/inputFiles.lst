@@ -12,5 +12,6 @@ C:\Users\Nix\Documents\Java programiranje\Nikola_Zecic_Java_Projekt\Projekt\Movi
 C:\Users\Nix\Documents\Java programiranje\Nikola_Zecic_Java_Projekt\Projekt\Movies\Dao\src\main\java\hr\algebra\models\Director.java
 C:\Users\Nix\Documents\Java programiranje\Nikola_Zecic_Java_Projekt\Projekt\Movies\Dao\src\main\java\hr\algebra\dal\sql\MovieActorRepository.java
 C:\Users\Nix\Documents\Java programiranje\Nikola_Zecic_Java_Projekt\Projekt\Movies\Dao\src\main\java\hr\algebra\models\MovieDirector.java
+C:\Users\Nix\Documents\Java programiranje\Nikola_Zecic_Java_Projekt\Projekt\Movies\Dao\src\main\java\hr\algebra\interfaces\Authenticable.java
 C:\Users\Nix\Documents\Java programiranje\Nikola_Zecic_Java_Projekt\Projekt\Movies\Dao\src\main\java\hr\algebra\models\Movie.java
 C:\Users\Nix\Documents\Java programiranje\Nikola_Zecic_Java_Projekt\Projekt\Movies\Dao\src\main\java\hr\algebra\dal\sql\DataSourceSingleton.java

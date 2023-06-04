@@ -13,6 +13,7 @@ import hr.algebra.models.MovieActor;
 import hr.algebra.models.MovieDirector;
 import hr.algebra.models.enums.RepoType;
 import hr.algebra.parsers.rss.MovieParser;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,14 +30,16 @@ import javax.xml.stream.XMLStreamException;
  */
 public class AdminApp extends javax.swing.JFrame {
 
+    private static final String DIR = "assets";
+
     private Repository<Movie> movieRepo;
     private Repository<Director> directorRepo;
     private Repository<Actor> actorRepo;
     private Repository<MovieDirector> movieDirectorRepo;
     private Repository<MovieActor> movieActorRepo;
-    
+
     private DefaultListModel<Movie> moviesModel;
-    
+
     /**
      * Creates new form AdminApp
      */
@@ -72,6 +75,11 @@ public class AdminApp extends javax.swing.JFrame {
         });
 
         btnDeleteAll.setText("Delete all");
+        btnDeleteAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteAllActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -107,48 +115,49 @@ public class AdminApp extends javax.swing.JFrame {
     private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
         try {
             Set<Movie> movies = MovieParser.parse();
-            
+
             Set<Director> allDirectorsForDb = getAllDirectors(movies);
             Set<Actor> allActorsForDb = getAllActors(movies);
-            
+
             directorRepo.createMultiple(new ArrayList<>(allDirectorsForDb));
             actorRepo.createMultiple(new ArrayList<>(allActorsForDb));
-            
+
             List<Director> directorsFromDb = directorRepo.selectAll();
             List<Actor> actorsFromDb = actorRepo.selectAll();
-            
+
             for (Movie movie : movies) {
                 int movieId = movieRepo.createSingle(movie);
                 int directorId;
                 int actorId;
                 List<MovieDirector> movieDirectors = new ArrayList<>();
                 List<MovieActor> movieActors = new ArrayList<>();
-                
+
                 for (Director director : movie.getDirectors()) {
                     for (Director directorFromDb : directorsFromDb) {
-                        if(director.getFirstName().equals(directorFromDb.getFirstName()) && director.getLastName().equals(directorFromDb.getLastName())){
+                        if (director.getFirstName().equals(directorFromDb.getFirstName()) && director.getLastName().equals(directorFromDb.getLastName())) {
                             directorId = directorFromDb.getId();
                             movieDirectors.add(new MovieDirector(movieId, directorId));
                             break;
                         }
                     }
                 }
-                
+
                 for (Actor actor : movie.getActors()) {
                     for (Actor actorFromDb : actorsFromDb) {
-                        if(actor.getFirstName().equals(actorFromDb.getFirstName()) && actor.getLastName().equals(actorFromDb.getLastName())){
+                        if (actor.getFirstName().equals(actorFromDb.getFirstName()) && actor.getLastName().equals(actorFromDb.getLastName())) {
                             actorId = actorFromDb.getId();
                             movieActors.add(new MovieActor(movieId, actorId));
                             break;
                         }
                     }
                 }
-                
+
                 movieDirectorRepo.createMultiple(movieDirectors);
                 movieActorRepo.createMultiple(movieActors);
             }
-            
+
             loadModel();
+            changeButtonsEnableProperty();
         } catch (IOException | XMLStreamException ex) {
             Logger.getLogger(AdminApp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
@@ -156,7 +165,18 @@ public class AdminApp extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnUploadActionPerformed
 
-    
+    private void btnDeleteAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAllActionPerformed
+        try {
+            movieRepo.deleteAll();
+            deleteDirectory(new File(DIR));
+            loadModel();
+            changeButtonsEnableProperty();
+        } catch (Exception ex) {
+            Logger.getLogger(AdminApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDeleteAllActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDeleteAll;
     private javax.swing.JButton btnUpload;
@@ -166,21 +186,21 @@ public class AdminApp extends javax.swing.JFrame {
 
     private Set<Director> getAllDirectors(Set<Movie> movies) {
         Set<Director> directors = new HashSet<>();
-        
+
         movies
                 .forEach(m -> m.getDirectors()
                 .forEach(directors::add));
-        
+
         return directors;
     }
 
     private Set<Actor> getAllActors(Set<Movie> movies) {
         Set<Actor> actors = new HashSet<>();
-        
+
         movies
                 .forEach(m -> m.getActors()
                 .forEach(actors::add));
-        
+
         return actors;
     }
 
@@ -189,6 +209,7 @@ public class AdminApp extends javax.swing.JFrame {
             initRepo();
             moviesModel = new DefaultListModel<>();
             loadModel();
+            changeButtonsEnableProperty();
         } catch (Exception ex) {
             Logger.getLogger(AdminApp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -205,30 +226,28 @@ public class AdminApp extends javax.swing.JFrame {
     private void loadModel() throws Exception {
         moviesModel.clear();
         List<Movie> movies = movieRepo.selectAll();
-        
+
         movies.forEach(moviesModel::addElement);
         lsMovies.setModel(moviesModel);
     }
-    
-    private Integer findDirectorId(Movie movie, List<Director> directorsFromDb) {
-        return movie.getDirectors()
-                        .stream()
-                        .flatMap(director -> directorsFromDb
-                                .stream()
-                                .filter(d -> d.getFirstName() == director.getFirstName() && d.getLastName() == director.getLastName()))
-                        .map(Director::getId)
-                        .findFirst()
-                        .get();
+
+    private void deleteDirectory(File file) {
+        File[] content = file.listFiles();
+        if (content != null) {
+            for (File f : content) {
+                deleteDirectory(f);
+            }
+        }
+        file.delete();
     }
-    
-    private Integer findActorId(Movie movie, List<Actor> actorsFromDb) {
-        return movie.getActors()
-                        .stream()
-                        .flatMap(actor -> actorsFromDb
-                                .stream()
-                                .filter(a -> a.getFirstName() == actor.getFirstName() && a.getLastName() == actor.getLastName()))
-                        .map(Actor::getId)
-                        .findFirst()
-                        .get();
+
+    private void changeButtonsEnableProperty() {
+        if (!moviesModel.isEmpty()) {
+            btnUpload.setEnabled(false);
+            btnDeleteAll.setEnabled(true);
+        } else {
+            btnUpload.setEnabled(true);
+            btnDeleteAll.setEnabled(false);
+        }
     }
 }

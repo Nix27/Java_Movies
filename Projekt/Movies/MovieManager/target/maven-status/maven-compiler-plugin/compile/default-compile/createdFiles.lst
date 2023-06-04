@@ -1,4 +1,3 @@
-hr\algebra\view\models\MovieVM.class
 hr\algebra\LoginRegisterDialog.class
 hr\algebra\views\appentrance\Register$2.class
 hr\algebra\views\appentrance\Register.class
@@ -8,6 +7,7 @@ hr\algebra\AdminApp$1.class
 hr\algebra\views\appentrance\Login$2.class
 hr\algebra\views\appentrance\Login$1.class
 hr\algebra\parsers\rss\MovieParser$TagType.class
+hr\algebra\AdminApp$2.class
 hr\algebra\LoginRegisterDialog$1.class
 hr\algebra\views\appentrance\Register$1.class
 hr\algebra\parsers\rss\MovieParser$1.class

@@ -44,6 +44,7 @@ public class MovieRepository implements Repository<Movie> {
     private static final String DELETE_MOVIE = "{ CALL deleteMovie (?) }";
     private static final String SELECT_MOVIE = "{ CALL selectMovie (?) }";
     private static final String SELECT_MOVIES = "{ CALL selectMovies }";
+    private static final String DELETE_ALL = "{ CALL deleteAll }";
 
     @Override
     public int createSingle(Movie entity) throws Exception {
@@ -199,5 +200,14 @@ public class MovieRepository implements Repository<Movie> {
         }
 
         return movies;
+    }
+    
+    @Override
+    public void deleteAll() throws Exception {
+        DataSource dataSource = DataSourceSingleton.getInstance();
+
+        try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(DELETE_ALL);) {
+            stmt.execute();
+        }
     }
 }
