@@ -13,15 +13,15 @@ import java.util.Objects;
 public class Director {
 
     private int id;
-    private String FirstName;
-    private String LastName;
+    private String firstName;
+    private String lastName;
 
     public Director() {
     }
 
     public Director(String FirstName, String LastName) {
-        this.FirstName = FirstName;
-        this.LastName = LastName;
+        this.firstName = FirstName;
+        this.lastName = LastName;
     }
 
     public Director(int id, String FirstName, String LastName) {
@@ -38,26 +38,26 @@ public class Director {
     }
 
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
     public void setFirstName(String FirstName) {
-        this.FirstName = FirstName;
+        this.firstName = FirstName;
     }
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 
     public void setLastName(String LastName) {
-        this.LastName = LastName;
+        this.lastName = LastName;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.FirstName);
-        hash = 79 * hash + Objects.hashCode(this.LastName);
+        hash = 79 * hash + Objects.hashCode(this.firstName);
+        hash = 79 * hash + Objects.hashCode(this.lastName);
         return hash;
     }
 
@@ -73,9 +73,14 @@ public class Director {
             return false;
         }
         final Director other = (Director) obj;
-        if (!Objects.equals(this.FirstName, other.FirstName)) {
+        if (!Objects.equals(this.firstName, other.firstName)) {
             return false;
         }
-        return Objects.equals(this.LastName, other.LastName);
+        return Objects.equals(this.lastName, other.lastName);
+    }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
     }
 }

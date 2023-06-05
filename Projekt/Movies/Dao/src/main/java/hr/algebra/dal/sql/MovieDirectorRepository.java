@@ -88,11 +88,11 @@ public class MovieDirectorRepository implements Repository<MovieDirector> {
     }
 
     @Override
-    public Optional<MovieDirector> selectSingle(int id) throws Exception {
+    public Optional<MovieDirector> selectSingle(int movieId) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
 
         try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(SELECT_MOVIE_DIRECTOR);) {
-            stmt.setInt(ID_MOVIE_DIRECTOR, id);
+            stmt.setInt(MOVIE_ID, movieId);
             try (ResultSet rs = stmt.executeQuery();) {
                 if (rs.next()) {
                     return Optional.of(new MovieDirector(
@@ -123,6 +123,28 @@ public class MovieDirectorRepository implements Repository<MovieDirector> {
             }
         }
 
+        return movieDirectors;
+    }
+
+    @Override
+    public List<MovieDirector> selectMultiple(int movieId) throws Exception {
+        List<MovieDirector> movieDirectors = new ArrayList<>();
+        
+        DataSource dataSource = DataSourceSingleton.getInstance();
+
+        try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(SELECT_MOVIE_DIRECTOR);) {
+            stmt.setInt(MOVIE_ID, movieId);
+            try (ResultSet rs = stmt.executeQuery();) {
+                while (rs.next()) {
+                    movieDirectors.add(new MovieDirector(
+                            rs.getInt(ID_MOVIE_DIRECTOR),
+                            rs.getInt(MOVIE_ID),
+                            rs.getInt(DIRECTOR_ID)
+                    ));
+                }
+            }
+        }
+        
         return movieDirectors;
     }
 }

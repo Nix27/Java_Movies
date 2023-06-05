@@ -4,14 +4,59 @@
  */
 package hr.algebra.views.moviemanager;
 
+import hr.algebra.dal.Repository;
+import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.models.Actor;
 import hr.algebra.models.Director;
+import hr.algebra.models.Movie;
+import hr.algebra.models.MovieActor;
+import hr.algebra.models.MovieDirector;
+import hr.algebra.models.enums.RepoType;
+import hr.algebra.utilities.FileUtils;
+import hr.algebra.utilities.IconUtils;
+import hr.algebra.view.models.MovieTableModel;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javax.swing.JLabel;
+import javax.swing.ListSelectionModel;
+import javax.swing.text.JTextComponent;
+import java.util.stream.Collectors;
+import javax.swing.DefaultListModel;
 
 /**
  *
  * @author Nix
  */
 public class Movies extends javax.swing.JPanel {
+
+    private static final String DIR = "assets";
+
+    private List<JTextComponent> validationFields;
+    private List<JLabel> errorLabels;
+
+    private Repository<Movie> movieRepo;
+    private Repository<Director> directorRepo;
+    private Repository<Actor> actorRepo;
+    private Repository<MovieDirector> movieDirectorRepo;
+    private Repository<MovieActor> movieActorRepo;
+
+    private MovieTableModel movieTableModel;
+
+    private Movie selectedMovie;
+    
+    private final DefaultListModel<Director> directorsModel = new DefaultListModel<>();
+    private final DefaultListModel<Actor> actorsModel = new DefaultListModel<>();
 
     /**
      * Creates new form Movies
@@ -37,10 +82,10 @@ public class Movies extends javax.swing.JPanel {
         tfPubDate = new javax.swing.JTextField();
         lbPubDateError = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        lbPubDateError1 = new javax.swing.JLabel();
+        lbDescriptionError = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        taDescription = new javax.swing.JTextArea();
         tfOriginalTitle = new javax.swing.JTextField();
         lbOriginalTitleError = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -48,7 +93,7 @@ public class Movies extends javax.swing.JPanel {
         spDuration = new javax.swing.JSpinner();
         jLabel6 = new javax.swing.JLabel();
         tfYearOfRelease = new javax.swing.JTextField();
-        lbOriginalTitleError1 = new javax.swing.JLabel();
+        lbYearOfReleaseError = new javax.swing.JLabel();
         tfGenre = new javax.swing.JTextField();
         lbGenreError = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -80,6 +125,13 @@ public class Movies extends javax.swing.JPanel {
         jScrollPane6 = new javax.swing.JScrollPane();
         lsAllActors = new javax.swing.JList<>();
         jLabel14 = new javax.swing.JLabel();
+        lbPicturePathError = new javax.swing.JLabel();
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
         jLabel1.setText("Title");
 
@@ -94,11 +146,18 @@ public class Movies extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblMovies.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblMoviesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblMovies);
 
         lbTitleError.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lbTitleError.setForeground(new java.awt.Color(255, 0, 0));
         lbTitleError.setText("X");
+
+        tfPubDate.setName("PubDate"); // NOI18N
 
         lbPubDateError.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lbPubDateError.setForeground(new java.awt.Color(255, 0, 0));
@@ -106,15 +165,16 @@ public class Movies extends javax.swing.JPanel {
 
         jLabel4.setText("Published date");
 
-        lbPubDateError1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lbPubDateError1.setForeground(new java.awt.Color(255, 0, 0));
-        lbPubDateError1.setText("X");
+        lbDescriptionError.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbDescriptionError.setForeground(new java.awt.Color(255, 0, 0));
+        lbDescriptionError.setText("X");
 
         jLabel5.setText("Description");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        taDescription.setColumns(20);
+        taDescription.setLineWrap(true);
+        taDescription.setRows(5);
+        jScrollPane2.setViewportView(taDescription);
 
         lbOriginalTitleError.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lbOriginalTitleError.setForeground(new java.awt.Color(255, 0, 0));
@@ -128,9 +188,9 @@ public class Movies extends javax.swing.JPanel {
 
         jLabel6.setText("Year of release");
 
-        lbOriginalTitleError1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lbOriginalTitleError1.setForeground(new java.awt.Color(255, 0, 0));
-        lbOriginalTitleError1.setText("X");
+        lbYearOfReleaseError.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbYearOfReleaseError.setForeground(new java.awt.Color(255, 0, 0));
+        lbYearOfReleaseError.setText("X");
 
         lbGenreError.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lbGenreError.setForeground(new java.awt.Color(255, 0, 0));
@@ -189,6 +249,10 @@ public class Movies extends javax.swing.JPanel {
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel14.setText("Movies");
 
+        lbPicturePathError.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbPicturePathError.setForeground(new java.awt.Color(255, 0, 0));
+        lbPicturePathError.setText("X");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -207,7 +271,7 @@ public class Movies extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lbPubDateError1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lbDescriptionError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tfPubDate, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -232,7 +296,7 @@ public class Movies extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(tfYearOfRelease, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lbOriginalTitleError1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(lbYearOfReleaseError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -253,8 +317,10 @@ public class Movies extends javax.swing.JPanel {
                                     .addComponent(lbTrailerError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(32, 32, 32))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(195, 195, 195))
+                        .addComponent(lbIcon)
+                        .addGap(18, 18, 18)
+                        .addComponent(lbPicturePathError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(247, 247, 247))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(tfPicturePath, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -322,7 +388,9 @@ public class Movies extends javax.swing.JPanel {
                                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(185, 185, 185))))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(lbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lbIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbPicturePathError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(tfPicturePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -348,11 +416,15 @@ public class Movies extends javax.swing.JPanel {
                                         .addComponent(tfReservation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(lbReservationError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(lbTrailer, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lbTrailer, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tfTrailer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lbTrailerError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lbPubDateError1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(lbDescriptionError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(spDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -360,22 +432,26 @@ public class Movies extends javax.swing.JPanel {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(tfYearOfRelease, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lbOriginalTitleError1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(lbYearOfReleaseError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(tfGenre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(lbGenreError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tfTrailer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lbTrailerError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGap(7, 7, 7))))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        init();
+    }//GEN-LAST:event_formComponentShown
+
+    private void tblMoviesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMoviesMouseClicked
+        showMovie();
+    }//GEN-LAST:event_tblMoviesMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -403,23 +479,24 @@ public class Movies extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel lbDescriptionError;
     private javax.swing.JLabel lbGenreError;
     private javax.swing.JLabel lbIcon;
     private javax.swing.JLabel lbLinkError;
     private javax.swing.JLabel lbOriginalTitleError;
-    private javax.swing.JLabel lbOriginalTitleError1;
+    private javax.swing.JLabel lbPicturePathError;
     private javax.swing.JLabel lbPubDateError;
-    private javax.swing.JLabel lbPubDateError1;
     private javax.swing.JLabel lbReservationError;
     private javax.swing.JLabel lbTitleError;
     private javax.swing.JLabel lbTrailer;
     private javax.swing.JLabel lbTrailerError;
+    private javax.swing.JLabel lbYearOfReleaseError;
     private javax.swing.JList<Actor> lsActors;
     private javax.swing.JList<Actor> lsAllActors;
     private javax.swing.JList<String> lsAllDirectors;
     private javax.swing.JList<Director> lsDirectors;
     private javax.swing.JSpinner spDuration;
+    private javax.swing.JTextArea taDescription;
     private javax.swing.JTable tblMovies;
     private javax.swing.JTextField tfGenre;
     private javax.swing.JTextField tfLink;
@@ -431,4 +508,192 @@ public class Movies extends javax.swing.JPanel {
     private javax.swing.JTextField tfTrailer;
     private javax.swing.JTextField tfYearOfRelease;
     // End of variables declaration//GEN-END:variables
+
+    private void init() {
+        try {
+            initValidation();
+            hideErrors();
+            initRepository();
+            initTable();
+        } catch (Exception ex) {
+            Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void initValidation() {
+        validationFields = Arrays.asList(
+                tfTitle, tfPubDate, taDescription, tfPicturePath, tfYearOfRelease, tfGenre, tfOriginalTitle,
+                tfLink, tfReservation, tfTrailer
+        );
+
+        errorLabels = Arrays.asList(
+                lbTitleError, lbPubDateError, lbDescriptionError, lbPicturePathError, lbYearOfReleaseError, lbGenreError,
+                lbOriginalTitleError, lbLinkError, lbReservationError, lbTrailerError
+        );
+    }
+
+    private void hideErrors() {
+        errorLabels.forEach(e -> e.setVisible(false));
+    }
+
+    private void initRepository() throws Exception {
+        movieRepo = RepositoryFactory.getRepository(RepoType.MOVIE);
+        directorRepo = RepositoryFactory.getRepository(RepoType.DIRECTOR);
+        actorRepo = RepositoryFactory.getRepository(RepoType.ACTOR);
+        movieDirectorRepo = RepositoryFactory.getRepository(RepoType.MOVIE_DIRECTOR);
+        movieActorRepo = RepositoryFactory.getRepository(RepoType.MOVIE_ACTOR);
+    }
+
+    private void initTable() throws Exception {
+        tblMovies.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblMovies.setAutoCreateRowSorter(true);
+        tblMovies.setRowHeight(25);
+
+        movieTableModel = new MovieTableModel(movieRepo.selectAll());
+        tblMovies.setModel(movieTableModel);
+    }
+
+    private boolean formValid() {
+        hideErrors();
+
+        boolean ok = true;
+
+        for (int i = 0; i < validationFields.size(); i++) {
+            ok &= !validationFields.get(i).getText().trim().isEmpty();
+            errorLabels.get(i).setVisible(validationFields.get(i).getText().trim().isEmpty());
+            if ("PubDate".equals(validationFields.get(i).getName())) {
+                try {
+                    LocalDateTime.parse(validationFields.get(i).getText().trim(), Movie.DATE_TIME_FORMATTER);
+                } catch (Exception e) {
+                    ok = false;
+                    errorLabels.get(i).setVisible(true);
+                }
+            }
+        }
+
+        return ok;
+    }
+
+    private void clearForm() {
+        hideErrors();
+        validationFields.forEach(f -> f.setText(""));
+        lbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/no_image.jpeg")));
+        selectedMovie = null;
+    }
+
+    private String uploadPicture() throws IOException {
+        String picturePath = tfPicturePath.getText();
+        String ext = picturePath.substring(picturePath.lastIndexOf("."));
+        String pictureName = UUID.randomUUID() + ext;
+        String localPicturePath = DIR + File.separator + pictureName;
+
+        FileUtils.copy(picturePath, localPicturePath);
+
+        return localPicturePath;
+    }
+
+    private void setIcon(JLabel label, File file) {
+        try {
+            label.setIcon(IconUtils.createIcon(file, label.getWidth(), label.getHeight()));
+        } catch (IOException ex) {
+            Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void showMovie() {
+        clearForm();
+
+        int selectedRow = tblMovies.getSelectedRow();
+        int rowIndex = tblMovies.convertRowIndexToModel(selectedRow);
+        int selectedArticleId = (int) movieTableModel.getValueAt(rowIndex, 0);
+
+        try {
+            Optional<Movie> optMovie = movieRepo.selectSingle(selectedArticleId);
+            if (optMovie.isPresent()) {
+                selectedMovie = optMovie.get();
+                List<Director> directors = getDirectors(selectedMovie);
+                List<Actor> actors = getActors(selectedMovie);
+                
+                selectedMovie.setDirectors(directors);
+                selectedMovie.setActors(actors);
+
+                fillForm(selectedMovie);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void fillForm(Movie movie) {
+        if (movie.getPoster() != null && Files.exists(Paths.get(movie.getPoster()))) {
+            tfPicturePath.setText(movie.getPoster());
+            setIcon(lbIcon, new File(movie.getPoster()));
+        }
+        
+        tfTitle.setText(movie.getTitle());
+        tfPubDate.setText(movie.getPublishedDate().format(Movie.DATE_TIME_FORMATTER));
+        taDescription.setText(movie.getDescription());
+        spDuration.setValue(movie.getDuration());
+        tfYearOfRelease.setText(((Integer)movie.getYearOfRelease()).toString());
+        tfGenre.setText(movie.getGenre());
+        tfOriginalTitle.setText(movie.getOriginalTitle());
+        tfLink.setText(movie.getLink());
+        tfReservation.setText(movie.getReservation());
+        tfTrailer.setText(movie.getTrailer());
+        
+        loadDirectorsModel(movie.getDirectors());
+        loadActorsModel(movie.getActors());
+    }
+
+    private List<Director> getDirectors(Movie selectedMovie) throws Exception {
+        List<Director> directors = new ArrayList<>();
+        
+        int movieId = selectedMovie.getId();
+        List<MovieDirector> movieDirectors = movieDirectorRepo.selectMultiple(movieId);
+        List<Integer> directorIds = movieDirectors.stream()
+                .map(d -> d.getDirectorId())
+                .collect(Collectors.toList());
+        
+        directorIds.forEach(id -> {
+            try {
+                directors.add(directorRepo.selectSingle(id).get());
+            } catch (Exception ex) {
+                Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+        return directors;
+    }
+
+    private List<Actor> getActors(Movie selectedMovie) throws Exception {
+        List<Actor> actors = new ArrayList<>();
+        
+        int movieId = selectedMovie.getId();
+        List<MovieActor> movieActors = movieActorRepo.selectMultiple(movieId);
+        List<Integer> actorIds = movieActors.stream()
+                .map(a -> a.getActorId())
+                .collect(Collectors.toList());
+        
+        actorIds.forEach(id -> {
+            try {
+                actors.add(actorRepo.selectSingle(id).get());
+            } catch (Exception ex) {
+                Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+        return actors;
+    }
+
+    private void loadDirectorsModel(List<Director> directors) {
+        directorsModel.clear();
+        directors.forEach(directorsModel::addElement);
+        lsDirectors.setModel(directorsModel);
+    }
+
+    private void loadActorsModel(List<Actor> actors) {
+        actorsModel.clear();
+        actors.forEach(actorsModel::addElement);
+        lsActors.setModel(actorsModel);
+    }
 }

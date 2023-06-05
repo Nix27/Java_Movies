@@ -4,6 +4,7 @@
  */
 package hr.algebra.dal;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -21,4 +22,8 @@ public interface Repository<T> {
     List<T> selectAll() throws Exception;
     
     default void deleteAll() throws Exception {}
+    
+    default List<T> selectMultiple(int id) throws Exception {
+        return new ArrayList<>();
+    }
 }

@@ -6,6 +6,7 @@ package hr.algebra.dal.sql;
 
 import hr.algebra.dal.Repository;
 import hr.algebra.models.MovieActor;
+import hr.algebra.models.MovieDirector;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -123,6 +124,28 @@ public class MovieActorRepository implements Repository<MovieActor>{
             }
         }
 
+        return movieActors;
+    }
+
+    @Override
+    public List<MovieActor> selectMultiple(int movieId) throws Exception {
+        List<MovieActor> movieActors = new ArrayList<>();
+        
+        DataSource dataSource = DataSourceSingleton.getInstance();
+
+        try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(SELECT_MOVIE_ACTOR);) {
+            stmt.setInt(MOVIE_ID, movieId);
+            try (ResultSet rs = stmt.executeQuery();) {
+                while (rs.next()) {
+                    movieActors.add(new MovieActor(
+                            rs.getInt(ID_MOVIE_ACTOR),
+                            rs.getInt(MOVIE_ID),
+                            rs.getInt(ACTOR_ID)
+                    ));
+                }
+            }
+        }
+        
         return movieActors;
     }
 }

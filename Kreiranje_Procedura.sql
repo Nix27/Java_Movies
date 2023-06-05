@@ -265,12 +265,12 @@ END
 
 GO
 
-CREATE PROCEDURE selectMovieDirector
-	@IDMovieDirector INT
+CREATE or ALTER PROCEDURE selectMovieDirector
+	@MovieId INT
 AS 
 BEGIN 
 	SELECT * FROM MovieDirector
-	WHERE IDMovieDirector = @IDMovieDirector
+	WHERE MovieId = @MovieId
 END
 
 GO
@@ -321,12 +321,12 @@ END
 
 GO
 
-CREATE PROCEDURE selectMovieActor
-	@IDMovieActor INT
+CREATE or ALTER PROCEDURE selectMovieActor
+	@MovieId INT
 AS 
 BEGIN 
 	SELECT * FROM MovieActor
-	WHERE IDMovieActor = @IDMovieActor
+	WHERE MovieId = @MovieId
 END
 
 GO
