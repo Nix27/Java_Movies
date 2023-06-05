@@ -4,13 +4,9 @@
  */
 package hr.algebra;
 
-import hr.algebra.models.Movie;
-import hr.algebra.parsers.rss.MovieParser;
-import java.io.IOException;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.stream.XMLStreamException;
+import hr.algebra.views.moviemanager.Actors;
+import hr.algebra.views.moviemanager.Directors;
+import hr.algebra.views.moviemanager.Movies;
 
 /**
  *
@@ -18,11 +14,16 @@ import javax.xml.stream.XMLStreamException;
  */
 public class MovieManager extends javax.swing.JFrame {
 
+    private final static String MOVIES = "Movies";
+    private static final String DIRECTORS = "Directors";
+    private static final String ACTORS = "Actors";
+    
     /**
      * Creates new form MovieManager
      */
     public MovieManager() {
         initComponents();
+        init();
     }
 
     /**
@@ -34,47 +35,34 @@ public class MovieManager extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        tpContent = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        setTitle("Movie manager");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(99, 99, 99)
-                .addComponent(jButton1)
-                .addContainerGap(226, Short.MAX_VALUE))
+            .addComponent(tpContent, javax.swing.GroupLayout.DEFAULT_SIZE, 1300, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(94, 94, 94)
-                .addComponent(jButton1)
-                .addContainerGap(183, Short.MAX_VALUE))
+            .addComponent(tpContent, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            Set<Movie> movies = MovieParser.parse();
-        } catch (IOException | XMLStreamException ex) {
-            Logger.getLogger(MovieManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JTabbedPane tpContent;
     // End of variables declaration//GEN-END:variables
+
+    private void init() {
+        tpContent.add(MOVIES, new Movies());
+        tpContent.add(DIRECTORS, new Directors());
+        tpContent.add(ACTORS, new Actors());
+    }
 }

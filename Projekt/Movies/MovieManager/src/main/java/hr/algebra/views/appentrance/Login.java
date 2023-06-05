@@ -5,6 +5,7 @@
 package hr.algebra.views.appentrance;
 
 import hr.algebra.AdminApp;
+import hr.algebra.MovieManager;
 import hr.algebra.dal.Repository;
 import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.dal.sql.DataSourceSingleton;
@@ -31,6 +32,9 @@ import javax.swing.text.JTextComponent;
  */
 public class Login extends javax.swing.JPanel implements Authenticable{
 
+    private static final String ADMIN = "Admin";
+    private static final String USER = "User";
+    
     private List<JTextComponent> validationFields;
     private List<JLabel> errorLabels;
 
@@ -166,7 +170,11 @@ public class Login extends javax.swing.JPanel implements Authenticable{
                 
                 parent.dispose();
                 
-                new AdminApp().setVisible(true);
+                if(optUserRole.get().equals(ADMIN)){
+                    new AdminApp().setVisible(true);
+                }else{
+                    new MovieManager().setVisible(true);
+                }
             }else{
                 lbWrongData.setVisible(true);
             }
