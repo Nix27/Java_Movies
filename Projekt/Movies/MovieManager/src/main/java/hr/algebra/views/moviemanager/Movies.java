@@ -16,6 +16,7 @@ import hr.algebra.models.MovieDirector;
 import hr.algebra.models.enums.RepoType;
 import hr.algebra.utilities.FileUtils;
 import hr.algebra.utilities.IconUtils;
+import hr.algebra.utilities.MessageUtils;
 import hr.algebra.view.models.MovieTableModel;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -262,6 +263,11 @@ public class Movies extends javax.swing.JPanel {
         });
 
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnDelete.setBackground(new java.awt.Color(255, 0, 0));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
@@ -402,6 +408,7 @@ public class Movies extends javax.swing.JPanel {
                                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnDirectorRemove)
@@ -508,7 +515,9 @@ public class Movies extends javax.swing.JPanel {
     }//GEN-LAST:event_tblMoviesMouseClicked
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        if (!formValid()) return;
+        if (!formValid()) {
+            return;
+        }
 
         try {
             String localPicturePath = uploadPicture();
@@ -517,7 +526,7 @@ public class Movies extends javax.swing.JPanel {
                     LocalDateTime.parse(tfPubDate.getText().trim(), Movie.DATE_TIME_FORMATTER),
                     taDescription.getText().trim(),
                     tfOriginalTitle.getText().trim(),
-                    (int)spDuration.getValue(),
+                    (int) spDuration.getValue(),
                     Integer.parseInt(tfYearOfRelease.getText().trim()),
                     tfGenre.getText().trim(),
                     localPicturePath,
@@ -525,17 +534,19 @@ public class Movies extends javax.swing.JPanel {
                     tfReservation.getText().trim(),
                     tfTrailer.getText().trim()
             );
-            
+
             int movieId = movieRepo.createSingle(movie);
-            
-            if(directorsSet.size() > 0)
+
+            if (directorsSet.size() > 0) {
                 addMovieDirectors(movieId);
-            
-            if(actorsSet.size() > 0)
+            }
+
+            if (actorsSet.size() > 0) {
                 addMovieActors(movieId);
-            
+            }
+
             movieTableModel.setMovies(movieRepo.selectAll());
-            
+
             clearForm();
         } catch (IOException ex) {
             Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
@@ -556,13 +567,39 @@ public class Movies extends javax.swing.JPanel {
 
     private void btnChooseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseActionPerformed
         File file = FileUtils.uploadFile("Images", "jpg", "jpeg", "png");
-        if(file == null) return;
-        
+        if (file == null) {
+            return;
+        }
+
         tfPoster.setText(file.getAbsolutePath());
         setIcon(lbIcon, file);
     }//GEN-LAST:event_btnChooseActionPerformed
 
-    
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        if (selectedMovie == null) {
+            MessageUtils.showInformationMessage("Not selected movie", "Please select movie to update");
+            return;
+        }
+
+        if (!formValid()) {
+            return;
+        }
+
+        try {
+            updateSelectedMovie(selectedMovie);
+            updateMovieDirectorRelations();
+            updateMovieActorRelations();
+            
+            movieTableModel.setMovies(movieRepo.selectAll());
+            clearForm();
+        } catch (IOException ex) {
+            Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActorRemove;
     private javax.swing.JButton btnAdd;
@@ -681,8 +718,8 @@ public class Movies extends javax.swing.JPanel {
                     errorLabels.get(i).setVisible(true);
                 }
             }
-            
-            if("YearOfRelease".equals(validationFields.get(i).getName())){
+
+            if ("YearOfRelease".equals(validationFields.get(i).getName())) {
                 try {
                     Integer.parseInt(validationFields.get(i).getText().trim());
                 } catch (NumberFormatException numberFormatException) {
@@ -852,22 +889,128 @@ public class Movies extends javax.swing.JPanel {
 
     private void addMovieDirectors(int movieId) throws Exception {
         List<MovieDirector> movieDirectors = new ArrayList<>();
-        
+
         for (Director director : directorsSet) {
             movieDirectors.add(new MovieDirector(movieId, director.getId()));
         }
-        
+
         movieDirectorRepo.createMultiple(movieDirectors);
     }
 
     private void addMovieActors(int movieId) throws Exception {
         List<MovieActor> movieActors = new ArrayList<>();
-        
+
         for (Actor actor : actorsSet) {
             movieActors.add(new MovieActor(movieId, actor.getId()));
         }
-        
+
         movieActorRepo.createMultiple(movieActors);
+    }
+
+    private void updateSelectedMovie(Movie selectedMovie) throws IOException, Exception {
+        if (!tfPoster.getText().trim().equals(selectedMovie.getPoster())) {
+            if (selectedMovie.getPoster() != null) {
+                Files.deleteIfExists(Paths.get(selectedMovie.getPoster()));
+            }
+
+            String localPicturePath = uploadPicture();
+            selectedMovie.setPoster(localPicturePath);
+        }
+
+        selectedMovie.setTitle(tfTitle.getText().trim());
+        selectedMovie.setPublishedDate(LocalDateTime.parse(tfPubDate.getText().trim(), Movie.DATE_TIME_FORMATTER));
+        selectedMovie.setDescription(taDescription.getText().trim());
+        selectedMovie.setOriginalTitle(tfOriginalTitle.getText().trim());
+        selectedMovie.setDuration((int) spDuration.getValue());
+        selectedMovie.setYearOfRelease(Integer.parseInt(tfYearOfRelease.getText().trim()));
+        selectedMovie.setGenre(tfGenre.getText().trim());
+        selectedMovie.setLink(tfLink.getText().trim());
+        selectedMovie.setReservation(tfReservation.getText().trim());
+        selectedMovie.setTrailer(tfTrailer.getText().trim());
+        
+        movieRepo.update(selectedMovie.getId(), selectedMovie);
+    }
+
+    private void updateMovieDirectorRelations() throws Exception {
+        List<MovieDirector> movieDirectors = movieDirectorRepo.selectMultiple(selectedMovie.getId());
+
+        List<Integer> directorIdsFromDb = movieDirectors
+                .stream()
+                .map(md -> md.getDirectorId())
+                .collect(Collectors.toList());
+
+        List<Integer> directorIdsFromList = directorsSet
+                .stream()
+                .map(d -> d.getId())
+                .collect(Collectors.toList());
+        
+        deleteOldMovieDirectorRelations(movieDirectors, directorIdsFromDb, directorIdsFromList);
+        createNewMovieDirectorRelations(movieDirectors, directorIdsFromDb,directorIdsFromList);
+    }
+
+    private void deleteOldMovieDirectorRelations(List<MovieDirector> movieDirectors ,List<Integer> directorIdsFromDb, List<Integer> directorIdsFromList) throws Exception, Exception {
+        List<Integer> directorIdsFromDbCopy = new ArrayList<>(directorIdsFromDb);
+        directorIdsFromDbCopy.removeAll(directorIdsFromList);
+
+        if (!directorIdsFromDbCopy.isEmpty()) {
+            for (MovieDirector movieDirector : movieDirectors) {
+                if (directorIdsFromDbCopy.contains(movieDirector.getDirectorId())) {
+                    movieDirectorRepo.delete(movieDirector.getId());
+                }
+            }
+        }
+    }
+
+    private void createNewMovieDirectorRelations(List<MovieDirector> movieDirectors, List<Integer> directorIdsFromDb, List<Integer> directorIdsFromList) throws Exception {
+        List<Integer> directorsIdsFromListCopy = new ArrayList<>(directorIdsFromList);
+        directorsIdsFromListCopy.removeAll(directorIdsFromDb);
+
+        if (!directorsIdsFromListCopy.isEmpty()) {
+            for (Integer directorId : directorsIdsFromListCopy) {
+                movieDirectorRepo.createSingle(new MovieDirector(selectedMovie.getId(), directorId));
+            }
+        }
+    }
+
+    private void updateMovieActorRelations() throws Exception {
+        List<MovieActor> movieActors = movieActorRepo.selectMultiple(selectedMovie.getId());
+
+        List<Integer> actorIdsFromDb = movieActors
+                .stream()
+                .map(ma -> ma.getActorId())
+                .collect(Collectors.toList());
+
+        List<Integer> actorIdsFromList = actorsSet
+                .stream()
+                .map(a -> a.getId())
+                .collect(Collectors.toList());
+        
+        deleteOldMovieActorRelations(movieActors, actorIdsFromDb, actorIdsFromList);
+        createNewMovieActorRelations(movieActors, actorIdsFromDb,actorIdsFromList);
+    }
+
+    private void deleteOldMovieActorRelations(List<MovieActor> movieActors, List<Integer> actorIdsFromDb, List<Integer> actorIdsFromList) throws Exception {
+        List<Integer> actorIdsFromDbCopy = new ArrayList<>(actorIdsFromDb);
+        actorIdsFromDbCopy.removeAll(actorIdsFromList);
+
+        if (!actorIdsFromDbCopy.isEmpty()) {
+            for (MovieActor movieActor : movieActors) {
+                if (actorIdsFromDbCopy.contains(movieActor.getActorId())) {
+                    movieActorRepo.delete(movieActor.getId());
+                }
+            }
+        }
+    }
+
+    private void createNewMovieActorRelations(List<MovieActor> movieActors, List<Integer> actorIdsFromDb, List<Integer> actorIdsFromList) throws Exception {
+        List<Integer> actorsIdsFromListCopy = new ArrayList<>(actorIdsFromList);
+        actorsIdsFromListCopy.removeAll(actorIdsFromDb);
+
+        if (!actorsIdsFromListCopy.isEmpty()) {
+            for (Integer actorId : actorsIdsFromListCopy) {
+                movieActorRepo.createSingle(new MovieActor(selectedMovie.getId(), actorId));
+            }
+        }
     }
 
     private class DirectorExportTransferHandler extends TransferHandler {

@@ -7,6 +7,7 @@ hr\algebra\views\appentrance\Login$2.class
 hr\algebra\views\moviemanager\Movies$2.class
 hr\algebra\views\moviemanager\Movies$4.class
 hr\algebra\parsers\rss\MovieParser$TagType.class
+hr\algebra\views\moviemanager\Movies$7.class
 hr\algebra\views\moviemanager\Movies$DirectorImportTransferHandler.class
 hr\algebra\AdminApp$2.class
 hr\algebra\LoginRegisterDialog$1.class
@@ -14,11 +15,13 @@ hr\algebra\views\moviemanager\Directors.class
 hr\algebra\parsers\rss\MovieParser$1.class
 hr\algebra\views\appentrance\Login.class
 hr\algebra\MovieManager.class
+hr\algebra\views\moviemanager\Movies$6.class
 hr\algebra\LoginRegisterDialog.class
 hr\algebra\AdminApp$1.class
 hr\algebra\views\moviemanager\Movies$1.class
 hr\algebra\views\moviemanager\Movies$ActorExportTransferHandler.class
 hr\algebra\views\moviemanager\Movies$ActorImportTransferHandler.class
+hr\algebra\moviemanager\utilities\MovieUtility.class
 hr\algebra\view\models\MovieTableModel.class
 hr\algebra\views\appentrance\Login$1.class
 hr\algebra\views\moviemanager\Actors.class
