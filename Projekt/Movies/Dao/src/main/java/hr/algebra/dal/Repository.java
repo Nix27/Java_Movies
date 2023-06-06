@@ -7,7 +7,6 @@ package hr.algebra.dal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  *
@@ -15,7 +14,7 @@ import java.util.Set;
  */
 public interface Repository<T> {
     int createSingle(T entity) throws Exception;
-    void createMultiple(List<T> entities) throws Exception;
+    List<T> createMultiple(List<T> entities) throws Exception;
     void update(int id, T entity) throws Exception;
     void delete(int id) throws Exception;
     Optional<T> selectSingle(int id) throws Exception;

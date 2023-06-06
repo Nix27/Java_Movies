@@ -2,8 +2,10 @@ hr\algebra\views\appentrance\Register$2.class
 hr\algebra\views\appentrance\Register.class
 hr\algebra\LoginRegisterDialog$1$1.class
 hr\algebra\AdminApp.class
+hr\algebra\views\moviemanager\Movies$5.class
 hr\algebra\views\appentrance\Login$2.class
 hr\algebra\views\moviemanager\Movies$2.class
+hr\algebra\views\moviemanager\Movies$4.class
 hr\algebra\parsers\rss\MovieParser$TagType.class
 hr\algebra\views\moviemanager\Movies$DirectorImportTransferHandler.class
 hr\algebra\AdminApp$2.class

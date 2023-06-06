@@ -48,7 +48,9 @@ public class DirectorRepository implements Repository<Director> {
     }
 
     @Override
-    public void createMultiple(List<Director> entities) throws Exception {
+    public List<Director> createMultiple(List<Director> entities) throws Exception {
+        List<Director> directors = new ArrayList<>();
+        
         DataSource dataSource = DataSourceSingleton.getInstance();
 
         try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(CREATE_DIRECTOR);) {
@@ -59,8 +61,18 @@ public class DirectorRepository implements Repository<Director> {
                 stmt.registerOutParameter(ID_DIRECTOR, Types.INTEGER);
 
                 stmt.executeUpdate();
+                
+                int id = stmt.getInt(ID_DIRECTOR);
+                
+                directors.add(new Director(
+                        id,
+                        entity.getFirstName(),
+                        entity.getLastName()
+                ));
             }
         }
+        
+        return directors;
     }
 
     @Override

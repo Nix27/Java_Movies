@@ -10,7 +10,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Types;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,15 +31,12 @@ public class MovieRepository implements Repository<Movie> {
     private static final String YEAR_OF_RELEASE = "YearOfRelease";
     private static final String GENRE = "Genre";
     private static final String POSTER = "Poster";
-    private static final String TYPE_OF_MOVIE = "TypeOfMovie";
     private static final String LINK = "Link";
     private static final String RESERVATION = "Reservation";
-    private static final String DATE_OF_DISPLAY = "DateOfDisplay";
-    private static final String SORT = "Sort";
     private static final String TRAILER = "Trailer";
 
-    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }";
-    private static final String UPDATE_MOVIE = "{ CALL updateMovie (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) }";
+    private static final String CREATE_MOVIE = "{ CALL createMovie (?,?,?,?,?,?,?,?,?,?,?,?) }";
+    private static final String UPDATE_MOVIE = "{ CALL updateMovie (?,?,?,?,?,?,?,?,?,?,?,?) }";
     private static final String DELETE_MOVIE = "{ CALL deleteMovie (?) }";
     private static final String SELECT_MOVIE = "{ CALL selectMovie (?) }";
     private static final String SELECT_MOVIES = "{ CALL selectMovies }";
@@ -59,11 +55,8 @@ public class MovieRepository implements Repository<Movie> {
             stmt.setInt(YEAR_OF_RELEASE, entity.getYearOfRelease());
             stmt.setString(GENRE, entity.getGenre());
             stmt.setString(POSTER, entity.getPoster());
-            stmt.setString(TYPE_OF_MOVIE, entity.getTypeOfMovie());
             stmt.setString(LINK, entity.getLink());
             stmt.setString(RESERVATION, entity.getReservation());
-            stmt.setString(DATE_OF_DISPLAY, entity.getDateOfDisplay().format(Movie.DATE_FORMATTER));
-            stmt.setInt(SORT, entity.getSort());
             stmt.setString(TRAILER, entity.getTrailer());
 
             stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
@@ -75,7 +68,9 @@ public class MovieRepository implements Repository<Movie> {
     }
 
     @Override
-    public void createMultiple(List<Movie> entities) throws Exception {
+    public List<Movie> createMultiple(List<Movie> entities) throws Exception {
+        List<Movie> movies = new ArrayList<>();
+        
         DataSource dataSource = DataSourceSingleton.getInstance();
 
         try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(CREATE_MOVIE);) {
@@ -88,18 +83,34 @@ public class MovieRepository implements Repository<Movie> {
                 stmt.setInt(YEAR_OF_RELEASE, entity.getYearOfRelease());
                 stmt.setString(GENRE, entity.getGenre());
                 stmt.setString(POSTER, entity.getPoster());
-                stmt.setString(TYPE_OF_MOVIE, entity.getTypeOfMovie());
                 stmt.setString(LINK, entity.getLink());
                 stmt.setString(RESERVATION, entity.getReservation());
-                stmt.setString(DATE_OF_DISPLAY, entity.getDateOfDisplay().format(Movie.DATE_FORMATTER));
-                stmt.setInt(SORT, entity.getSort());
                 stmt.setString(TRAILER, entity.getTrailer());
 
                 stmt.registerOutParameter(ID_MOVIE, Types.INTEGER);
 
                 stmt.executeUpdate();
+                
+                int id = stmt.getInt(ID_MOVIE);
+                
+                movies.add(new Movie(
+                        id,
+                        entity.getTitle(),
+                        entity.getPublishedDate(),
+                        entity.getDescription(),
+                        entity.getOriginalTitle(),
+                        entity.getDuration(),
+                        entity.getYearOfRelease(),
+                        entity.getGenre(),
+                        entity.getPoster(),
+                        entity.getLink(),
+                        entity.getReservation(),
+                        entity.getTrailer()
+                ));
             }
         }
+        
+        return movies;
     }
 
     @Override
@@ -115,11 +126,8 @@ public class MovieRepository implements Repository<Movie> {
             stmt.setInt(YEAR_OF_RELEASE, entity.getYearOfRelease());
             stmt.setString(GENRE, entity.getGenre());
             stmt.setString(POSTER, entity.getPoster());
-            stmt.setString(TYPE_OF_MOVIE, entity.getTypeOfMovie());
             stmt.setString(LINK, entity.getLink());
             stmt.setString(RESERVATION, entity.getReservation());
-            stmt.setString(DATE_OF_DISPLAY, entity.getDateOfDisplay().format(Movie.DATE_FORMATTER));
-            stmt.setInt(SORT, entity.getSort());
             stmt.setString(TRAILER, entity.getTrailer());
 
             stmt.setInt(ID_MOVIE, id);
@@ -157,11 +165,8 @@ public class MovieRepository implements Repository<Movie> {
                             rs.getInt(YEAR_OF_RELEASE),
                             rs.getString(GENRE),
                             rs.getString(POSTER),
-                            rs.getString(TYPE_OF_MOVIE),
                             rs.getString(LINK),
                             rs.getString(RESERVATION),
-                            LocalDate.parse(rs.getString(DATE_OF_DISPLAY), Movie.DATE_FORMATTER),
-                            rs.getInt(SORT),
                             rs.getString(TRAILER)
                     ));
                 }
@@ -189,11 +194,8 @@ public class MovieRepository implements Repository<Movie> {
                         rs.getInt(YEAR_OF_RELEASE),
                         rs.getString(GENRE),
                         rs.getString(POSTER),
-                        rs.getString(TYPE_OF_MOVIE),
                         rs.getString(LINK),
                         rs.getString(RESERVATION),
-                        LocalDate.parse(rs.getString(DATE_OF_DISPLAY), Movie.DATE_FORMATTER),
-                        rs.getInt(SORT),
                         rs.getString(TRAILER)
                 ));
             }

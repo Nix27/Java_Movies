@@ -4,7 +4,6 @@
  */
 package hr.algebra.models;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.Objects;
  */
 public class Movie {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
     
     private int id;
     private String title;
@@ -28,11 +26,8 @@ public class Movie {
     private int yearOfRelease;
     private String genre;
     private String poster;
-    private String typeOfMovie;
     private String link;
     private String reservation;
-    private LocalDate dateOfDisplay;
-    private int sort;
     private String trailer;
     private List<Director> directors = new ArrayList<>();
     private List<Actor> actors = new ArrayList<>();
@@ -40,7 +35,7 @@ public class Movie {
     public Movie() {
     }
 
-    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, int duration, int yearOfRelease, String genre, String poster, String typeOfMovie, String link, String reservation, LocalDate dateOfDisplay, int sort, String trailer) {
+    public Movie(String title, LocalDateTime publishedDate, String description, String originalTitle, int duration, int yearOfRelease, String genre, String poster, String link, String reservation, String trailer) {
         this.title = title;
         this.publishedDate = publishedDate;
         this.description = description;
@@ -49,16 +44,13 @@ public class Movie {
         this.yearOfRelease = yearOfRelease;
         this.genre = genre;
         this.poster = poster;
-        this.typeOfMovie = typeOfMovie;
         this.link = link;
         this.reservation = reservation;
-        this.dateOfDisplay = dateOfDisplay;
-        this.sort = sort;
         this.trailer = trailer;
     }
 
-    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, int duration, int yearOfRelease, String genre, String poster, String typeOfMovie, String link, String reservation, LocalDate dateOfDisplay, int sort, String trailer) {
-        this(title, publishedDate, description, originalTitle, duration, yearOfRelease, genre, poster, typeOfMovie, link, reservation, dateOfDisplay, sort, trailer);
+    public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, int duration, int yearOfRelease, String genre, String poster, String link, String reservation, String trailer) {
+        this(title, publishedDate, description, originalTitle, duration, yearOfRelease, genre, poster, link, reservation, trailer);
         this.id = id;
     }
 
@@ -134,14 +126,6 @@ public class Movie {
         this.poster = poster;
     }
 
-    public String getTypeOfMovie() {
-        return typeOfMovie;
-    }
-
-    public void setTypeOfMovie(String typeOfMovie) {
-        this.typeOfMovie = typeOfMovie;
-    }
-
     public String getLink() {
         return link;
     }
@@ -156,22 +140,6 @@ public class Movie {
 
     public void setReservation(String reservation) {
         this.reservation = reservation;
-    }
-
-    public LocalDate getDateOfDisplay() {
-        return dateOfDisplay;
-    }
-
-    public void setDateOfDisplay(LocalDate dateOfDisplay) {
-        this.dateOfDisplay = dateOfDisplay;
-    }
-
-    public int getSort() {
-        return sort;
-    }
-
-    public void setSort(int sort) {
-        this.sort = sort;
     }
 
     public String getTrailer() {

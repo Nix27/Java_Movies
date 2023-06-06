@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -135,11 +134,6 @@ public class MovieParser {
                                         handlePicture(movie, data);
                                     }
                                     break;
-                                case VRSTA:
-                                    if (!data.isEmpty()) {
-                                        movie.setTypeOfMovie(data);
-                                    }
-                                    break;
                                 case LINK:
                                     if (!data.isEmpty()) {
                                         movie.setLink(data);
@@ -148,17 +142,6 @@ public class MovieParser {
                                 case REZERVACIJA:
                                     if (!data.isEmpty()) {
                                         movie.setReservation(data);
-                                    }
-                                    break;
-                                case DATUM_PRIKAZIVANJA:
-                                    if (!data.isEmpty()) {
-                                        LocalDate dateOfDisplay = LocalDate.parse(data, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-                                        movie.setDateOfDisplay(dateOfDisplay);
-                                    }
-                                    break;
-                                case SORT:
-                                    if (!data.isEmpty()) {
-                                        movie.setSort(Integer.parseInt(data));
                                     }
                                     break;
                                 case TRAILER:
@@ -189,11 +172,8 @@ public class MovieParser {
         GODINA("godina"),
         ZANR("zanr"),
         PLAKAT("plakat"),
-        VRSTA("vrsta"),
         LINK("link"),
         REZERVACIJA("rezervacija"),
-        DATUM_PRIKAZIVANJA("datumprikazivanja"),
-        SORT("sort"),
         TRAILER("trailer");
 
         private final String name;

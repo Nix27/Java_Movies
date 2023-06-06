@@ -22,7 +22,7 @@ END
 
 GO
 
-CREATE PROCEDURE createMovie
+CREATE or ALTER PROCEDURE createMovie
 	@Title NVARCHAR(100),
 	@PublishedDate NVARCHAR(100),
 	@Description NVARCHAR(max),
@@ -31,23 +31,20 @@ CREATE PROCEDURE createMovie
 	@YearOfRelease int,
 	@Genre NVARCHAR(100),
 	@Poster NVARCHAR(1000),
-	@TypeOfMovie NVARCHAR(50),
 	@Link NVARCHAR(1000),
 	@Reservation NVARCHAR(1000),
-	@DateOfDisplay NVARCHAR(100),
-	@Sort int,
 	@Trailer NVARCHAR(100),
 	@IDMovie INT OUTPUT
 AS 
 BEGIN 
-	INSERT INTO Movie(Title, PublishedDate, Description, OriginalTitle, Duration, YearOfRelease, Genre, Poster, TypeOfMovie, Link, Reservation, DateOfDisplay, Sort, Trailer) 
-	VALUES(@Title, @PublishedDate, @Description, @OriginalTitle, @Duration, @YearOfRelease, @Genre, @Poster, @TypeOfMovie, @Link, @Reservation, @DateOfDisplay, @Sort, @Trailer)
+	INSERT INTO Movie(Title, PublishedDate, Description, OriginalTitle, Duration, YearOfRelease, Genre, Poster, Link, Reservation, Trailer) 
+	VALUES(@Title, @PublishedDate, @Description, @OriginalTitle, @Duration, @YearOfRelease, @Genre, @Poster, @Link, @Reservation, @Trailer)
 	SET @IDMovie = SCOPE_IDENTITY()
 END
 
 GO
 
-CREATE PROCEDURE updateMovie
+CREATE or ALTER PROCEDURE updateMovie
 	@Title NVARCHAR(100),
 	@PublishedDate NVARCHAR(100),
 	@Description NVARCHAR(max),
@@ -56,11 +53,8 @@ CREATE PROCEDURE updateMovie
 	@YearOfRelease int,
 	@Genre NVARCHAR(100),
 	@Poster NVARCHAR(1000),
-	@TypeOfMovie NVARCHAR(50),
 	@Link NVARCHAR(1000),
 	@Reservation NVARCHAR(1000),
-	@DateOfDisplay NVARCHAR(100),
-	@Sort int,
 	@Trailer NVARCHAR(100),
 	@IDMovie INT
 	 
@@ -75,11 +69,8 @@ BEGIN
 		YearOfRelease = @YearOfRelease,
 		Genre = @Genre,
 		Poster = @Poster,
-		TypeOfMovie = @TypeOfMovie,
 		Link = @Link,
 		Reservation = @Reservation,
-		DateOfDisplay = @DateOfDisplay,
-		Sort = @Sort,
 		Trailer = @Trailer
 	WHERE 
 		IDMovie = @IDMovie

@@ -48,7 +48,9 @@ public class MovieDirectorRepository implements Repository<MovieDirector> {
     }
 
     @Override
-    public void createMultiple(List<MovieDirector> entities) throws Exception {
+    public List<MovieDirector> createMultiple(List<MovieDirector> entities) throws Exception {
+        List<MovieDirector> movieDirectors = new ArrayList<>();
+        
         DataSource dataSource = DataSourceSingleton.getInstance();
 
         try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(CREATE_MOVIE_DIRECTOR);) {
@@ -59,8 +61,18 @@ public class MovieDirectorRepository implements Repository<MovieDirector> {
                 stmt.registerOutParameter(ID_MOVIE_DIRECTOR, Types.INTEGER);
 
                 stmt.executeUpdate();
+                
+                int id = stmt.getInt(ID_MOVIE_DIRECTOR);
+                
+                movieDirectors.add(new MovieDirector(
+                        id,
+                        entity.getMovieId(),
+                        entity.getDirectorId()
+                ));
             }
         }
+        
+        return movieDirectors;
     }
 
     @Override

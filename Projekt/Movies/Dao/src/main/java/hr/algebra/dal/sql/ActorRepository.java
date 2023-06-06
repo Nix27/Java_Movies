@@ -47,7 +47,9 @@ public class ActorRepository implements Repository<Actor>{
     }
 
     @Override
-    public void createMultiple(List<Actor> entities) throws Exception {
+    public List<Actor> createMultiple(List<Actor> entities) throws Exception {
+        List<Actor> actors = new ArrayList<>();
+        
         DataSource dataSource = DataSourceSingleton.getInstance();
 
         try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(CREATE_ACTOR);) {
@@ -58,8 +60,18 @@ public class ActorRepository implements Repository<Actor>{
                 stmt.registerOutParameter(ID_ACTOR, Types.INTEGER);
 
                 stmt.executeUpdate();
+                
+                int id = stmt.getInt(ID_ACTOR);
+                
+                actors.add(new Actor(
+                        id,
+                        entity.getFirstName(),
+                        entity.getLastName()
+                ));
             }
         }
+        
+        return actors;
     }
 
     @Override

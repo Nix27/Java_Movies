@@ -6,7 +6,6 @@ package hr.algebra.dal.sql;
 
 import hr.algebra.dal.Repository;
 import hr.algebra.models.MovieActor;
-import hr.algebra.models.MovieDirector;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -20,7 +19,7 @@ import javax.sql.DataSource;
  *
  * @author Nix
  */
-public class MovieActorRepository implements Repository<MovieActor>{
+public class MovieActorRepository implements Repository<MovieActor> {
 
     private static final String ID_MOVIE_ACTOR = "IDMovieActor";
     private static final String MOVIE_ID = "MovieId";
@@ -31,7 +30,7 @@ public class MovieActorRepository implements Repository<MovieActor>{
     private static final String DELETE_MOVIE_ACTOR = "{ CALL deleteMovieActor (?) }";
     private static final String SELECT_MOVIE_ACTOR = "{ CALL selectMovieActor (?) }";
     private static final String SELECT_MOVIE_ACTORS = "{ CALL selectMovieActors }";
-    
+
     @Override
     public int createSingle(MovieActor entity) throws Exception {
         DataSource dataSource = DataSourceSingleton.getInstance();
@@ -49,7 +48,8 @@ public class MovieActorRepository implements Repository<MovieActor>{
     }
 
     @Override
-    public void createMultiple(List<MovieActor> entities) throws Exception {
+    public List<MovieActor> createMultiple(List<MovieActor> entities) throws Exception {
+        List<MovieActor> movieActors = new ArrayList<>();
         DataSource dataSource = DataSourceSingleton.getInstance();
 
         try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(CREATE_MOVIE_ACTOR);) {
@@ -60,8 +60,18 @@ public class MovieActorRepository implements Repository<MovieActor>{
                 stmt.registerOutParameter(ID_MOVIE_ACTOR, Types.INTEGER);
 
                 stmt.executeUpdate();
+                
+                int id = stmt.getInt(ID_MOVIE_ACTOR);
+                
+                movieActors.add(new MovieActor(
+                        id,
+                        entity.getMovieId(),
+                        entity.getActorId()
+                ));
             }
         }
+        
+        return movieActors;
     }
 
     @Override
@@ -130,7 +140,7 @@ public class MovieActorRepository implements Repository<MovieActor>{
     @Override
     public List<MovieActor> selectMultiple(int movieId) throws Exception {
         List<MovieActor> movieActors = new ArrayList<>();
-        
+
         DataSource dataSource = DataSourceSingleton.getInstance();
 
         try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(SELECT_MOVIE_ACTOR);) {
@@ -145,7 +155,7 @@ public class MovieActorRepository implements Repository<MovieActor>{
                 }
             }
         }
-        
+
         return movieActors;
     }
 }
