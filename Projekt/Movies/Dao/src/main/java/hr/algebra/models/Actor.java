@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author Nix
  */
-public class Actor {
+public class Actor implements Comparable<Actor>{
     private int id;
     private String firstName;
     private String lastName;
@@ -81,5 +81,10 @@ public class Actor {
     @Override
     public String toString() {
         return firstName + " " + lastName;
+    }
+
+    @Override
+    public int compareTo(Actor o) {
+        return lastName.compareTo(o.lastName);
     }
 }

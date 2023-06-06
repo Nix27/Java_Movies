@@ -7,7 +7,9 @@ package hr.algebra.views.moviemanager;
 import hr.algebra.dal.Repository;
 import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.models.Actor;
+import hr.algebra.models.ActorTransferable;
 import hr.algebra.models.Director;
+import hr.algebra.models.DirectorTransferable;
 import hr.algebra.models.Movie;
 import hr.algebra.models.MovieActor;
 import hr.algebra.models.MovieDirector;
@@ -15,6 +17,12 @@ import hr.algebra.models.enums.RepoType;
 import hr.algebra.utilities.FileUtils;
 import hr.algebra.utilities.IconUtils;
 import hr.algebra.view.models.MovieTableModel;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,8 +30,11 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +44,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
 import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
+import javax.swing.DropMode;
+import javax.swing.JComponent;
+import javax.swing.TransferHandler;
 
 /**
  *
@@ -54,9 +68,15 @@ public class Movies extends javax.swing.JPanel {
     private MovieTableModel movieTableModel;
 
     private Movie selectedMovie;
-    
+
+    private final DefaultListModel<Director> allDirectorsModel = new DefaultListModel<>();
+    private final DefaultListModel<Actor> allActorsModel = new DefaultListModel<>();
+
     private final DefaultListModel<Director> directorsModel = new DefaultListModel<>();
     private final DefaultListModel<Actor> actorsModel = new DefaultListModel<>();
+
+    private Set<Director> directorsSet = new HashSet<>();
+    private Set<Actor> actorsSet = new HashSet<>();
 
     /**
      * Creates new form Movies
@@ -231,6 +251,11 @@ public class Movies extends javax.swing.JPanel {
         jScrollPane4.setViewportView(lsActors);
 
         btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         btnUpdate.setText("Update");
 
@@ -453,6 +478,18 @@ public class Movies extends javax.swing.JPanel {
         showMovie();
     }//GEN-LAST:event_tblMoviesMouseClicked
 
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        if (!formValid()) {
+            return;
+        }
+
+        try {
+            String localPicturePath = uploadPicture();
+        } catch (IOException ex) {
+            Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAddActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
@@ -493,7 +530,7 @@ public class Movies extends javax.swing.JPanel {
     private javax.swing.JLabel lbYearOfReleaseError;
     private javax.swing.JList<Actor> lsActors;
     private javax.swing.JList<Actor> lsAllActors;
-    private javax.swing.JList<String> lsAllDirectors;
+    private javax.swing.JList<Director> lsAllDirectors;
     private javax.swing.JList<Director> lsDirectors;
     private javax.swing.JSpinner spDuration;
     private javax.swing.JTextArea taDescription;
@@ -515,6 +552,8 @@ public class Movies extends javax.swing.JPanel {
             hideErrors();
             initRepository();
             initTable();
+            initDragAndDrop();
+            initLists();
         } catch (Exception ex) {
             Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -600,6 +639,19 @@ public class Movies extends javax.swing.JPanel {
         }
     }
 
+    private void initLists() throws Exception {
+        List<Director> allDirectors = directorRepo.selectAll();
+        List<Actor> allActors = actorRepo.selectAll();
+
+        allDirectorsModel.clear();
+        allDirectors.forEach(allDirectorsModel::addElement);
+        lsAllDirectors.setModel(allDirectorsModel);
+
+        allActorsModel.clear();
+        allActors.forEach(allActorsModel::addElement);
+        lsAllActors.setModel(allActorsModel);
+    }
+
     private void showMovie() {
         clearForm();
 
@@ -613,7 +665,10 @@ public class Movies extends javax.swing.JPanel {
                 selectedMovie = optMovie.get();
                 List<Director> directors = getDirectors(selectedMovie);
                 List<Actor> actors = getActors(selectedMovie);
-                
+
+                directorsSet = new TreeSet<>(directors);
+                actorsSet = new TreeSet<>(actors);
+
                 selectedMovie.setDirectors(directors);
                 selectedMovie.setActors(actors);
 
@@ -629,31 +684,31 @@ public class Movies extends javax.swing.JPanel {
             tfPicturePath.setText(movie.getPoster());
             setIcon(lbIcon, new File(movie.getPoster()));
         }
-        
+
         tfTitle.setText(movie.getTitle());
         tfPubDate.setText(movie.getPublishedDate().format(Movie.DATE_TIME_FORMATTER));
         taDescription.setText(movie.getDescription());
         spDuration.setValue(movie.getDuration());
-        tfYearOfRelease.setText(((Integer)movie.getYearOfRelease()).toString());
+        tfYearOfRelease.setText(((Integer) movie.getYearOfRelease()).toString());
         tfGenre.setText(movie.getGenre());
         tfOriginalTitle.setText(movie.getOriginalTitle());
         tfLink.setText(movie.getLink());
         tfReservation.setText(movie.getReservation());
         tfTrailer.setText(movie.getTrailer());
-        
-        loadDirectorsModel(movie.getDirectors());
-        loadActorsModel(movie.getActors());
+
+        loadDirectorsModel();
+        loadActorsModel();
     }
 
     private List<Director> getDirectors(Movie selectedMovie) throws Exception {
         List<Director> directors = new ArrayList<>();
-        
+
         int movieId = selectedMovie.getId();
         List<MovieDirector> movieDirectors = movieDirectorRepo.selectMultiple(movieId);
         List<Integer> directorIds = movieDirectors.stream()
                 .map(d -> d.getDirectorId())
                 .collect(Collectors.toList());
-        
+
         directorIds.forEach(id -> {
             try {
                 directors.add(directorRepo.selectSingle(id).get());
@@ -661,19 +716,19 @@ public class Movies extends javax.swing.JPanel {
                 Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        
+
         return directors;
     }
 
     private List<Actor> getActors(Movie selectedMovie) throws Exception {
         List<Actor> actors = new ArrayList<>();
-        
+
         int movieId = selectedMovie.getId();
         List<MovieActor> movieActors = movieActorRepo.selectMultiple(movieId);
         List<Integer> actorIds = movieActors.stream()
                 .map(a -> a.getActorId())
                 .collect(Collectors.toList());
-        
+
         actorIds.forEach(id -> {
             try {
                 actors.add(actorRepo.selectSingle(id).get());
@@ -681,19 +736,114 @@ public class Movies extends javax.swing.JPanel {
                 Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        
+
         return actors;
     }
 
-    private void loadDirectorsModel(List<Director> directors) {
+    private void loadDirectorsModel() {
         directorsModel.clear();
-        directors.forEach(directorsModel::addElement);
+        directorsSet.forEach(directorsModel::addElement);
         lsDirectors.setModel(directorsModel);
     }
 
-    private void loadActorsModel(List<Actor> actors) {
+    private void loadActorsModel() {
         actorsModel.clear();
-        actors.forEach(actorsModel::addElement);
+        actorsSet.forEach(actorsModel::addElement);
         lsActors.setModel(actorsModel);
+    }
+
+    private void initDragAndDrop() {
+        lsAllDirectors.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        lsAllDirectors.setDragEnabled(true);
+        lsAllDirectors.setTransferHandler(new DirectorExportTransferHandler());
+
+        lsDirectors.setDropMode(DropMode.ON);
+        lsDirectors.setTransferHandler(new DirectorImportTransferHandler());
+
+        lsAllActors.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        lsAllActors.setDragEnabled(true);
+        lsAllActors.setTransferHandler(new ActorExportTransferHandler());
+
+        lsActors.setDropMode(DropMode.ON);
+        lsActors.setTransferHandler(new ActorImportTransferHandler());
+    }
+
+    private class DirectorExportTransferHandler extends TransferHandler {
+
+        @Override
+        public int getSourceActions(JComponent c) {
+            return COPY;
+        }
+
+        @Override
+        protected Transferable createTransferable(JComponent c) {
+            return new DirectorTransferable(lsAllDirectors.getSelectedValue());
+        }
+    }
+
+    private class DirectorImportTransferHandler extends TransferHandler {
+
+        @Override
+        public boolean canImport(TransferSupport support) {
+            return support.isDataFlavorSupported(DirectorTransferable.DIRECTOR_FLAVOR);
+        }
+
+        @Override
+        public boolean importData(TransferSupport support) {
+            Transferable transferable = support.getTransferable();
+
+            try {
+                Director director = (Director) transferable.getTransferData(DirectorTransferable.DIRECTOR_FLAVOR);
+
+                if (directorsSet.add(director)) {
+                    loadDirectorsModel();
+                    return true;
+                }
+            } catch (UnsupportedFlavorException | IOException ex) {
+                Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            return false;
+        }
+    }
+
+    private class ActorExportTransferHandler extends TransferHandler {
+
+        @Override
+        public int getSourceActions(JComponent c) {
+            return COPY;
+        }
+
+        @Override
+        protected Transferable createTransferable(JComponent c) {
+            return new ActorTransferable(lsAllActors.getSelectedValue());
+        }
+
+    }
+
+    private class ActorImportTransferHandler extends TransferHandler {
+
+        @Override
+        public boolean canImport(TransferSupport support) {
+            return support.isDataFlavorSupported(ActorTransferable.ACTOR_FLAVOR);
+        }
+
+        @Override
+        public boolean importData(TransferSupport support) {
+            Transferable transferable = support.getTransferable();
+
+            try {
+                Actor actor = (Actor) transferable.getTransferData(ActorTransferable.ACTOR_FLAVOR);
+
+                if (actorsSet.add(actor)) {
+                    loadActorsModel();
+                    return true;
+                }
+            } catch (UnsupportedFlavorException | IOException ex) {
+                Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            return false;
+        }
     }
 }

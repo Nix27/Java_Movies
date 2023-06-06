@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author Nix
  */
-public class Director {
+public class Director implements Comparable<Director>{
 
     private int id;
     private String firstName;
@@ -82,5 +82,10 @@ public class Director {
     @Override
     public String toString() {
         return firstName + " " + lastName;
+    }
+
+    @Override
+    public int compareTo(Director o) {
+        return lastName.compareTo(o.lastName);
     }
 }
