@@ -272,6 +272,11 @@ public class Movies extends javax.swing.JPanel {
         btnDelete.setBackground(new java.awt.Color(255, 0, 0));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         jLabel12.setText("Actors");
 
@@ -537,11 +542,11 @@ public class Movies extends javax.swing.JPanel {
 
             int movieId = movieRepo.createSingle(movie);
 
-            if (directorsSet.size() > 0) {
+            if (!directorsSet.isEmpty()) {
                 addMovieDirectors(movieId);
             }
 
-            if (actorsSet.size() > 0) {
+            if (!actorsSet.isEmpty()) {
                 addMovieActors(movieId);
             }
 
@@ -589,7 +594,7 @@ public class Movies extends javax.swing.JPanel {
             updateSelectedMovie(selectedMovie);
             updateMovieDirectorRelations();
             updateMovieActorRelations();
-            
+
             movieTableModel.setMovies(movieRepo.selectAll());
             clearForm();
         } catch (IOException ex) {
@@ -598,6 +603,41 @@ public class Movies extends javax.swing.JPanel {
             Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        if (selectedMovie == null) {
+            MessageUtils.showInformationMessage("Movie not selected", "Please select movie");
+            return;
+        }
+
+        if (MessageUtils.showConfirmDialog("Delete movie", "Are you sure you want to delete the movie?")) {
+
+            try {
+                int movieId = selectedMovie.getId();
+                
+                List<MovieDirector> movieDirectors = movieDirectorRepo.selectMultiple(movieId);
+                deleteMovieDirectors(movieDirectors);
+                
+                List<MovieActor> movieActors = movieActorRepo.selectMultiple(movieId);
+                deleteMovieActors(movieActors);
+                
+                movieRepo.delete(movieId);
+                
+                if (selectedMovie.getPoster() != null) {
+                    Files.deleteIfExists(Paths.get(selectedMovie.getPoster()));
+                }
+                
+                movieTableModel.setMovies(movieRepo.selectAll());
+                
+                clearForm();
+            } catch (IOException ex) {
+                Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -927,7 +967,7 @@ public class Movies extends javax.swing.JPanel {
         selectedMovie.setLink(tfLink.getText().trim());
         selectedMovie.setReservation(tfReservation.getText().trim());
         selectedMovie.setTrailer(tfTrailer.getText().trim());
-        
+
         movieRepo.update(selectedMovie.getId(), selectedMovie);
     }
 
@@ -943,12 +983,12 @@ public class Movies extends javax.swing.JPanel {
                 .stream()
                 .map(d -> d.getId())
                 .collect(Collectors.toList());
-        
+
         deleteOldMovieDirectorRelations(movieDirectors, directorIdsFromDb, directorIdsFromList);
-        createNewMovieDirectorRelations(movieDirectors, directorIdsFromDb,directorIdsFromList);
+        createNewMovieDirectorRelations(movieDirectors, directorIdsFromDb, directorIdsFromList);
     }
 
-    private void deleteOldMovieDirectorRelations(List<MovieDirector> movieDirectors ,List<Integer> directorIdsFromDb, List<Integer> directorIdsFromList) throws Exception, Exception {
+    private void deleteOldMovieDirectorRelations(List<MovieDirector> movieDirectors, List<Integer> directorIdsFromDb, List<Integer> directorIdsFromList) throws Exception, Exception {
         List<Integer> directorIdsFromDbCopy = new ArrayList<>(directorIdsFromDb);
         directorIdsFromDbCopy.removeAll(directorIdsFromList);
 
@@ -984,9 +1024,9 @@ public class Movies extends javax.swing.JPanel {
                 .stream()
                 .map(a -> a.getId())
                 .collect(Collectors.toList());
-        
+
         deleteOldMovieActorRelations(movieActors, actorIdsFromDb, actorIdsFromList);
-        createNewMovieActorRelations(movieActors, actorIdsFromDb,actorIdsFromList);
+        createNewMovieActorRelations(movieActors, actorIdsFromDb, actorIdsFromList);
     }
 
     private void deleteOldMovieActorRelations(List<MovieActor> movieActors, List<Integer> actorIdsFromDb, List<Integer> actorIdsFromList) throws Exception {
@@ -1010,6 +1050,18 @@ public class Movies extends javax.swing.JPanel {
             for (Integer actorId : actorsIdsFromListCopy) {
                 movieActorRepo.createSingle(new MovieActor(selectedMovie.getId(), actorId));
             }
+        }
+    }
+
+    private void deleteMovieDirectors(List<MovieDirector> movieDirectors) throws Exception {
+        for (MovieDirector movieDirector : movieDirectors) {
+            movieDirectorRepo.delete(movieDirector.getId());
+        }
+    }
+
+    private void deleteMovieActors(List<MovieActor> movieActors) throws Exception {
+        for (MovieActor movieActor : movieActors) {
+            movieActorRepo.delete(movieActor.getId());
         }
     }
 

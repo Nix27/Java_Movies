@@ -27,6 +27,7 @@ hr\algebra\views\appentrance\Login$1.class
 hr\algebra\views\moviemanager\Actors.class
 hr\algebra\views\moviemanager\Movies$DirectorExportTransferHandler.class
 hr\algebra\views\moviemanager\Movies.class
+hr\algebra\views\moviemanager\Movies$8.class
 hr\algebra\views\appentrance\Register$1.class
 hr\algebra\parsers\rss\MovieParser.class
 hr\algebra\views\moviemanager\Movies$3.class
