@@ -4,16 +4,23 @@
  */
 package hr.algebra.models;
 
+import hr.algebra.adapters.PublishedDateAdapter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
  * @author Nix
  */
+@XmlType(propOrder = {"id", "title", "publishedDate", "description", "originalTitle", "duration", "yearOfRelease", "genre", "poster", "link", "reservation",
+"trailer", "directors", "actors"})
 public class Movie {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     
@@ -29,8 +36,8 @@ public class Movie {
     private String link;
     private String reservation;
     private String trailer;
-    private List<Director> directors = new ArrayList<>();
-    private List<Actor> actors = new ArrayList<>();
+    private List<Director> directors;
+    private List<Actor> actors;
 
     public Movie() {
     }
@@ -47,6 +54,8 @@ public class Movie {
         this.link = link;
         this.reservation = reservation;
         this.trailer = trailer;
+        directors = new ArrayList<>();
+        actors = new ArrayList<>();
     }
 
     public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, int duration, int yearOfRelease, String genre, String poster, String link, String reservation, String trailer) {
@@ -70,6 +79,8 @@ public class Movie {
         this.title = title;
     }
 
+    @XmlJavaTypeAdapter(PublishedDateAdapter.class)
+    @XmlElement(name = "published_date")
     public LocalDateTime getPublishedDate() {
         return publishedDate;
     }
@@ -86,6 +97,7 @@ public class Movie {
         this.description = description;
     }
 
+    @XmlElement(name = "original_title")
     public String getOriginalTitle() {
         return originalTitle;
     }
@@ -102,6 +114,7 @@ public class Movie {
         this.duration = duration;
     }
 
+    @XmlElement(name = "year_of_release")
     public int getYearOfRelease() {
         return yearOfRelease;
     }
@@ -150,6 +163,8 @@ public class Movie {
         this.trailer = trailer;
     }
 
+    @XmlElementWrapper
+    @XmlElement(name = "director")
     public List<Director> getDirectors() {
         return directors;
     }
@@ -158,6 +173,8 @@ public class Movie {
         this.directors = directors;
     }
 
+    @XmlElementWrapper
+    @XmlElement(name = "actor")
     public List<Actor> getActors() {
         return actors;
     }

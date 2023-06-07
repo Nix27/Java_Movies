@@ -5,11 +5,14 @@
 package hr.algebra.models;
 
 import java.util.Objects;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  *
  * @author Nix
  */
+@XmlType(propOrder = {"id", "firstName", "lastName"})
 public class Director implements Comparable<Director> {
 
     private int id;
@@ -37,6 +40,7 @@ public class Director implements Comparable<Director> {
         this.id = id;
     }
 
+    @XmlElement(name = "firstname")
     public String getFirstName() {
         return firstName;
     }
@@ -45,6 +49,7 @@ public class Director implements Comparable<Director> {
         this.firstName = FirstName;
     }
 
+    @XmlElement(name = "lastname")
     public String getLastName() {
         return lastName;
     }

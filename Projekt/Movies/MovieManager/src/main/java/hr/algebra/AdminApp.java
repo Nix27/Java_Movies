@@ -12,7 +12,6 @@ import hr.algebra.models.Director;
 import hr.algebra.models.MovieActor;
 import hr.algebra.models.MovieDirector;
 import hr.algebra.models.enums.RepoType;
-import hr.algebra.moviemanager.utilities.MovieUtility;
 import hr.algebra.parsers.rss.MovieParser;
 import java.io.File;
 import java.io.IOException;
@@ -124,13 +123,34 @@ public class AdminApp extends javax.swing.JFrame {
             List<Actor> actorsFromDb = actorRepo.createMultiple(new ArrayList<>(allActorsForDb));
 
             for (Movie movie : movies) {
-                MovieUtility.createMovie(
-                        movie, 
-                        movieRepo, 
-                        movieDirectorRepo, 
-                        movieActorRepo, 
-                        directorsFromDb, 
-                        actorsFromDb);
+                int movieId = movieRepo.createSingle(movie);
+                int directorId;
+                int actorId;
+                List<MovieDirector> movieDirectors = new ArrayList<>();
+                List<MovieActor> movieActors = new ArrayList<>();
+
+                for (Director director : movie.getDirectors()) {
+                    for (Director directorFromDb : directorsFromDb) {
+                        if (director.getFirstName().equals(directorFromDb.getFirstName()) && director.getLastName().equals(directorFromDb.getLastName())) {
+                            directorId = directorFromDb.getId();
+                            movieDirectors.add(new MovieDirector(movieId, directorId));
+                            break;
+                        }
+                    }
+                }
+
+                for (Actor actor : movie.getActors()) {
+                    for (Actor actorFromDb : actorsFromDb) {
+                        if (actor.getFirstName().equals(actorFromDb.getFirstName()) && actor.getLastName().equals(actorFromDb.getLastName())) {
+                            actorId = actorFromDb.getId();
+                            movieActors.add(new MovieActor(movieId, actorId));
+                            break;
+                        }
+                    }
+                }
+
+                movieDirectorRepo.createMultiple(movieDirectors);
+                movieActorRepo.createMultiple(movieActors);
             }
 
             loadModel();
