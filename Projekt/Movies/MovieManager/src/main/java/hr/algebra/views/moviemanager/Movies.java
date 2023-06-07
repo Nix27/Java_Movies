@@ -551,7 +551,6 @@ public class Movies extends javax.swing.JPanel {
             }
 
             movieTableModel.setMovies(movieRepo.selectAll());
-
             clearForm();
         } catch (IOException ex) {
             Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
@@ -628,7 +627,6 @@ public class Movies extends javax.swing.JPanel {
                 }
                 
                 movieTableModel.setMovies(movieRepo.selectAll());
-                
                 clearForm();
             } catch (IOException ex) {
                 Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
@@ -816,10 +814,10 @@ public class Movies extends javax.swing.JPanel {
 
         int selectedRow = tblMovies.getSelectedRow();
         int rowIndex = tblMovies.convertRowIndexToModel(selectedRow);
-        int selectedArticleId = (int) movieTableModel.getValueAt(rowIndex, 0);
+        int selectedMovieId = (int) movieTableModel.getValueAt(rowIndex, 0);
 
         try {
-            Optional<Movie> optMovie = movieRepo.selectSingle(selectedArticleId);
+            Optional<Movie> optMovie = movieRepo.selectSingle(selectedMovieId);
             if (optMovie.isPresent()) {
                 selectedMovie = optMovie.get();
                 List<Director> directors = getDirectors(selectedMovie);

@@ -4,11 +4,37 @@
  */
 package hr.algebra.views.moviemanager;
 
+import hr.algebra.dal.Repository;
+import hr.algebra.dal.RepositoryFactory;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.JLabel;
+import javax.swing.text.JTextComponent;
+import hr.algebra.models.Director;
+import hr.algebra.models.MovieDirector;
+import hr.algebra.models.enums.RepoType;
+import hr.algebra.utilities.MessageUtils;
+import hr.algebra.view.models.DirectorTableModel;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ListSelectionModel;
+
 /**
  *
  * @author Nix
  */
 public class Directors extends javax.swing.JPanel {
+
+    private List<JTextComponent> validationFields;
+    private List<JLabel> errorLabels;
+
+    private Repository<Director> directorRepo;
+    private Repository<MovieDirector> movieDirectorRepo;
+
+    private DirectorTableModel directorTableModel;
+
+    private Director selectedDirector;
 
     /**
      * Creates new form Directors
@@ -33,11 +59,17 @@ public class Directors extends javax.swing.JPanel {
         lbFirstError = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         tfLast = new javax.swing.JTextField();
-        tfLastError = new javax.swing.JLabel();
+        lbLastError = new javax.swing.JLabel();
         btnAdd = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
         tblDirectors.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -50,6 +82,11 @@ public class Directors extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblDirectors.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDirectorsMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblDirectors);
 
         jLabel1.setText("First name");
@@ -60,17 +97,32 @@ public class Directors extends javax.swing.JPanel {
 
         jLabel3.setText("Last name");
 
-        tfLastError.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        tfLastError.setForeground(new java.awt.Color(255, 0, 0));
-        tfLastError.setText("X");
+        lbLastError.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbLastError.setForeground(new java.awt.Color(255, 0, 0));
+        lbLastError.setText("X");
 
         btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnDelete.setBackground(new java.awt.Color(255, 0, 0));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setText("Directors");
@@ -104,7 +156,7 @@ public class Directors extends javax.swing.JPanel {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(tfLast, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(tfLastError, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                        .addComponent(lbLastError, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -128,7 +180,7 @@ public class Directors extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfLast, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tfLastError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(lbLastError, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAdd)
@@ -138,6 +190,74 @@ public class Directors extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        init();
+    }//GEN-LAST:event_formComponentShown
+
+    private void tblDirectorsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDirectorsMouseClicked
+        showDirector();
+    }//GEN-LAST:event_tblDirectorsMouseClicked
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        if (!formValid()) return;
+
+        try {
+            Director director = new Director(
+                    tfFirst.getText().trim(),
+                    tfLast.getText().trim()
+            );
+
+            directorRepo.createSingle(director);
+            directorTableModel.setDirectors(directorRepo.selectAll());
+            clearForm();
+        } catch (Exception ex) {
+            Logger.getLogger(Directors.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        if (selectedDirector == null) {
+            MessageUtils.showInformationMessage("Not selected director", "Please select director to update");
+            return;
+        }
+
+        if (!formValid()) {
+            return;
+        }
+
+        try {
+            updateSelectedDirector(selectedDirector);
+
+            directorTableModel.setDirectors(directorRepo.selectAll());
+            clearForm();
+        } catch (Exception ex) {
+            Logger.getLogger(Directors.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        if (selectedDirector == null) {
+            MessageUtils.showInformationMessage("Not selected director", "Please select director to update");
+            return;
+        }
+
+        if (MessageUtils.showConfirmDialog("Delete director", "Are you sure you want to delete director?")) {
+            
+            
+            try {
+                List<MovieDirector> movieDirectors = movieDirectorRepo.selectAll();
+                deleteMovieDirectors(movieDirectors);
+                
+                directorRepo.delete(selectedDirector.getId());
+                
+                directorTableModel.setDirectors(directorRepo.selectAll());
+                clearForm();
+            } catch (Exception ex) {
+                Logger.getLogger(Directors.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -149,9 +269,106 @@ public class Directors extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbFirstError;
+    private javax.swing.JLabel lbLastError;
     private javax.swing.JTable tblDirectors;
     private javax.swing.JTextField tfFirst;
     private javax.swing.JTextField tfLast;
-    private javax.swing.JLabel tfLastError;
     // End of variables declaration//GEN-END:variables
+
+    private void init() {
+        try {
+            initValidation();
+            hideErrors();
+            initRepository();
+            initTable();
+        } catch (Exception ex) {
+            Logger.getLogger(Directors.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void initValidation() {
+        validationFields = Arrays.asList(
+                tfFirst, tfLast
+        );
+
+        errorLabels = Arrays.asList(
+                lbFirstError, lbLastError
+        );
+    }
+
+    private void hideErrors() {
+        errorLabels.forEach(e -> e.setVisible(false));
+    }
+
+    private void initRepository() throws Exception {
+        directorRepo = RepositoryFactory.getRepository(RepoType.DIRECTOR);
+        movieDirectorRepo = RepositoryFactory.getRepository(RepoType.MOVIE_DIRECTOR);
+    }
+
+    private void initTable() throws Exception {
+        tblDirectors.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tblDirectors.setAutoCreateRowSorter(true);
+        tblDirectors.setRowHeight(25);
+        
+        directorTableModel = new DirectorTableModel(directorRepo.selectAll());
+        tblDirectors.setModel(directorTableModel);
+    }
+
+    private boolean formValid() {
+        hideErrors();
+
+        boolean ok = true;
+
+        for (int i = 0; i < validationFields.size(); i++) {
+            ok &= !validationFields.get(i).getText().trim().isEmpty();
+            errorLabels.get(i).setVisible(validationFields.get(i).getText().trim().isEmpty());
+        }
+
+        return ok;
+    }
+
+    private void clearForm() {
+        hideErrors();
+        validationFields.forEach(f -> f.setText(""));
+        selectedDirector = null;
+    }
+
+    private void showDirector() {
+        clearForm();
+
+        int selectedRow = tblDirectors.getSelectedRow();
+        int rowIndex = tblDirectors.convertRowIndexToModel(selectedRow);
+        int selectedDirectorId = (int) directorTableModel.getValueAt(rowIndex, 0);
+
+        try {
+            Optional<Director> optDirector = directorRepo.selectSingle(selectedDirectorId);
+
+            if (optDirector.isPresent()) {
+                selectedDirector = optDirector.get();
+                fillForm(selectedDirector);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Directors.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void fillForm(Director selectedDirector) {
+        tfFirst.setText(selectedDirector.getFirstName());
+        tfLast.setText(selectedDirector.getLastName());
+    }
+
+    private void updateSelectedDirector(Director selectedDirector) throws Exception {
+        selectedDirector.setFirstName(tfFirst.getText().trim());
+        selectedDirector.setLastName(tfLast.getText().trim());
+
+        directorRepo.update(selectedDirector.getId(), selectedDirector);
+    }
+
+    private void deleteMovieDirectors(List<MovieDirector> movieDirectors) throws Exception {
+        for (MovieDirector movieDirector : movieDirectors) {
+            if(movieDirector.getDirectorId() == selectedDirector.getId()){
+                movieDirectorRepo.delete(movieDirector.getId());
+            }
+        }
+    }
 }

@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author Nix
  */
-public class Director implements Comparable<Director>{
+public class Director implements Comparable<Director> {
 
     private int id;
     private String firstName;
