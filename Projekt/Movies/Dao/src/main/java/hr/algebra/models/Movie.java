@@ -36,8 +36,8 @@ public class Movie {
     private String link;
     private String reservation;
     private String trailer;
-    private List<Director> directors;
-    private List<Actor> actors;
+    private List<Director> directors = new ArrayList<>();
+    private List<Actor> actors = new ArrayList<>();
 
     public Movie() {
     }
@@ -54,8 +54,6 @@ public class Movie {
         this.link = link;
         this.reservation = reservation;
         this.trailer = trailer;
-        directors = new ArrayList<>();
-        actors = new ArrayList<>();
     }
 
     public Movie(int id, String title, LocalDateTime publishedDate, String description, String originalTitle, int duration, int yearOfRelease, String genre, String poster, String link, String reservation, String trailer) {

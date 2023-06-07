@@ -42,11 +42,8 @@ create table Movie
 	YearOfRelease int,
 	Genre nvarchar(100),
 	Poster nvarchar(1000),
-	TypeOfMovie nvarchar(50),
 	Link nvarchar(1000),
 	Reservation nvarchar(1000),
-	DateOfDisplay nvarchar(100),
-	Sort int,
 	Trailer nvarchar(100)
 )
 

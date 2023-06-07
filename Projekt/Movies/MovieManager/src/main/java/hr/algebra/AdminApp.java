@@ -113,53 +113,61 @@ public class AdminApp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
-        try {
-            Set<Movie> movies = MovieParser.parse();
+        new Thread(() -> {
+            try {
+                Set<Movie> movies = MovieParser.parse();
 
-            Set<Director> allDirectorsForDb = getAllDirectors(movies);
-            Set<Actor> allActorsForDb = getAllActors(movies);
+                Set<Director> allDirectorsForDb = getAllDirectors(movies);
+                Set<Actor> allActorsForDb = getAllActors(movies);
 
-            List<Director> directorsFromDb = directorRepo.createMultiple(new ArrayList<>(allDirectorsForDb));
-            List<Actor> actorsFromDb = actorRepo.createMultiple(new ArrayList<>(allActorsForDb));
+                List<Director> directorsFromDb = directorRepo.createMultiple(new ArrayList<>(allDirectorsForDb));
+                List<Actor> actorsFromDb = actorRepo.createMultiple(new ArrayList<>(allActorsForDb));
 
-            for (Movie movie : movies) {
-                int movieId = movieRepo.createSingle(movie);
-                int directorId;
-                int actorId;
-                List<MovieDirector> movieDirectors = new ArrayList<>();
-                List<MovieActor> movieActors = new ArrayList<>();
+                for (Movie movie : movies) {
+                    int movieId = movieRepo.createSingle(movie);
+                    int directorId;
+                    int actorId;
+                    List<MovieDirector> movieDirectors = new ArrayList<>();
+                    List<MovieActor> movieActors = new ArrayList<>();
 
-                for (Director director : movie.getDirectors()) {
-                    for (Director directorFromDb : directorsFromDb) {
-                        if (director.getFirstName().equals(directorFromDb.getFirstName()) && director.getLastName().equals(directorFromDb.getLastName())) {
-                            directorId = directorFromDb.getId();
-                            movieDirectors.add(new MovieDirector(movieId, directorId));
-                            break;
+                    for (Director director : movie.getDirectors()) {
+                        for (Director directorFromDb : directorsFromDb) {
+                            if (director.getFirstName().equals(directorFromDb.getFirstName()) && director.getLastName().equals(directorFromDb.getLastName())) {
+                                directorId = directorFromDb.getId();
+                                movieDirectors.add(new MovieDirector(movieId, directorId));
+                                break;
+                            }
                         }
                     }
-                }
 
-                for (Actor actor : movie.getActors()) {
-                    for (Actor actorFromDb : actorsFromDb) {
-                        if (actor.getFirstName().equals(actorFromDb.getFirstName()) && actor.getLastName().equals(actorFromDb.getLastName())) {
-                            actorId = actorFromDb.getId();
-                            movieActors.add(new MovieActor(movieId, actorId));
-                            break;
+                    for (Actor actor : movie.getActors()) {
+                        for (Actor actorFromDb : actorsFromDb) {
+                            if (actor.getFirstName().equals(actorFromDb.getFirstName()) && actor.getLastName().equals(actorFromDb.getLastName())) {
+                                actorId = actorFromDb.getId();
+                                movieActors.add(new MovieActor(movieId, actorId));
+                                break;
+                            }
                         }
                     }
+
+                    movieDirectorRepo.createMultiple(movieDirectors);
+                    movieActorRepo.createMultiple(movieActors);
                 }
 
-                movieDirectorRepo.createMultiple(movieDirectors);
-                movieActorRepo.createMultiple(movieActors);
+                java.awt.EventQueue.invokeLater(() -> {
+                    try {
+                        loadModel();
+                        changeButtonsEnableProperty();
+                    } catch (Exception ex) {
+                        Logger.getLogger(AdminApp.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
+            } catch (IOException | XMLStreamException ex) {
+                Logger.getLogger(AdminApp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(AdminApp.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            loadModel();
-            changeButtonsEnableProperty();
-        } catch (IOException | XMLStreamException ex) {
-            Logger.getLogger(AdminApp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(AdminApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }).start();
     }//GEN-LAST:event_btnUploadActionPerformed
 
     private void btnDeleteAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAllActionPerformed
