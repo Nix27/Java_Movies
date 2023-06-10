@@ -4,21 +4,12 @@
  */
 package hr.algebra;
 
-import hr.algebra.dal.Repository;
-import hr.algebra.dal.RepositoryFactory;
-import hr.algebra.models.Actor;
 import hr.algebra.models.Movie;
-import hr.algebra.models.Director;
-import hr.algebra.models.MovieActor;
-import hr.algebra.models.MovieDirector;
-import hr.algebra.models.enums.RepoType;
 import hr.algebra.parsers.rss.MovieParser;
+import hr.algebra.services.MovieService;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -32,13 +23,11 @@ public class AdminApp extends javax.swing.JFrame {
 
     private static final String DIR = "assets";
 
-    private Repository<Movie> movieRepo;
-    private Repository<Director> directorRepo;
-    private Repository<Actor> actorRepo;
-    private Repository<MovieDirector> movieDirectorRepo;
-    private Repository<MovieActor> movieActorRepo;
+    private MovieService movieService;
 
-    private DefaultListModel<Movie> moviesModel;
+    private DefaultListModel<Movie> moviesModel = new DefaultListModel<>();
+
+    ;
 
     /**
      * Creates new form AdminApp
@@ -115,44 +104,8 @@ public class AdminApp extends javax.swing.JFrame {
     private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
         new Thread(() -> {
             try {
-                Set<Movie> movies = MovieParser.parse();
-
-                Set<Director> allDirectorsForDb = getAllDirectors(movies);
-                Set<Actor> allActorsForDb = getAllActors(movies);
-
-                List<Director> directorsFromDb = directorRepo.createMultiple(new ArrayList<>(allDirectorsForDb));
-                List<Actor> actorsFromDb = actorRepo.createMultiple(new ArrayList<>(allActorsForDb));
-
-                for (Movie movie : movies) {
-                    int movieId = movieRepo.createSingle(movie);
-                    int directorId;
-                    int actorId;
-                    List<MovieDirector> movieDirectors = new ArrayList<>();
-                    List<MovieActor> movieActors = new ArrayList<>();
-
-                    for (Director director : movie.getDirectors()) {
-                        for (Director directorFromDb : directorsFromDb) {
-                            if (director.getFirstName().equals(directorFromDb.getFirstName()) && director.getLastName().equals(directorFromDb.getLastName())) {
-                                directorId = directorFromDb.getId();
-                                movieDirectors.add(new MovieDirector(movieId, directorId));
-                                break;
-                            }
-                        }
-                    }
-
-                    for (Actor actor : movie.getActors()) {
-                        for (Actor actorFromDb : actorsFromDb) {
-                            if (actor.getFirstName().equals(actorFromDb.getFirstName()) && actor.getLastName().equals(actorFromDb.getLastName())) {
-                                actorId = actorFromDb.getId();
-                                movieActors.add(new MovieActor(movieId, actorId));
-                                break;
-                            }
-                        }
-                    }
-
-                    movieDirectorRepo.createMultiple(movieDirectors);
-                    movieActorRepo.createMultiple(movieActors);
-                }
+                handleButtonsOnParse();
+                movieService.createMoviesOnParse(MovieParser.parse());
 
                 java.awt.EventQueue.invokeLater(() -> {
                     try {
@@ -172,7 +125,7 @@ public class AdminApp extends javax.swing.JFrame {
 
     private void btnDeleteAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAllActionPerformed
         try {
-            movieRepo.deleteAll();
+            movieService.deleteAll();
             deleteDirectory(new File(DIR));
             loadModel();
             changeButtonsEnableProperty();
@@ -189,30 +142,10 @@ public class AdminApp extends javax.swing.JFrame {
     private javax.swing.JList<Movie> lsMovies;
     // End of variables declaration//GEN-END:variables
 
-    private Set<Director> getAllDirectors(Set<Movie> movies) {
-        Set<Director> directors = new HashSet<>();
-
-        movies
-                .forEach(m -> m.getDirectors()
-                .forEach(directors::add));
-
-        return directors;
-    }
-
-    private Set<Actor> getAllActors(Set<Movie> movies) {
-        Set<Actor> actors = new HashSet<>();
-
-        movies
-                .forEach(m -> m.getActors()
-                .forEach(actors::add));
-
-        return actors;
-    }
-
     private void init() {
         try {
-            initRepo();
-            moviesModel = new DefaultListModel<>();
+            movieService = new MovieService();
+
             loadModel();
             changeButtonsEnableProperty();
         } catch (Exception ex) {
@@ -220,17 +153,9 @@ public class AdminApp extends javax.swing.JFrame {
         }
     }
 
-    private void initRepo() throws Exception {
-        movieRepo = RepositoryFactory.getRepository(RepoType.MOVIE);
-        directorRepo = RepositoryFactory.getRepository(RepoType.DIRECTOR);
-        actorRepo = RepositoryFactory.getRepository(RepoType.ACTOR);
-        movieDirectorRepo = RepositoryFactory.getRepository(RepoType.MOVIE_DIRECTOR);
-        movieActorRepo = RepositoryFactory.getRepository(RepoType.MOVIE_ACTOR);
-    }
-
     private void loadModel() throws Exception {
         moviesModel.clear();
-        List<Movie> movies = movieRepo.selectAll();
+        List<Movie> movies = movieService.getAllMovies();
 
         movies.forEach(moviesModel::addElement);
         lsMovies.setModel(moviesModel);
@@ -244,6 +169,11 @@ public class AdminApp extends javax.swing.JFrame {
             }
         }
         file.delete();
+    }
+
+    private void handleButtonsOnParse() {
+        btnUpload.setEnabled(false);
+        btnDeleteAll.setEnabled(false);
     }
 
     private void changeButtonsEnableProperty() {

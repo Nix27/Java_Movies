@@ -6,21 +6,12 @@ package hr.algebra.views.appentrance;
 
 import hr.algebra.AdminApp;
 import hr.algebra.MovieManager;
-import hr.algebra.dal.Repository;
-import hr.algebra.dal.RepositoryFactory;
-import hr.algebra.dal.sql.DataSourceSingleton;
-import hr.algebra.interfaces.Authenticable;
-import hr.algebra.models.AppUser;
-import hr.algebra.models.enums.RepoType;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
+import hr.algebra.services.UserService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sql.DataSource;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
@@ -30,7 +21,7 @@ import javax.swing.text.JTextComponent;
  *
  * @author Nix
  */
-public class Login extends javax.swing.JPanel implements Authenticable{
+public class Login extends javax.swing.JPanel{
 
     private static final String ADMIN = "Admin";
     private static final String USER = "User";
@@ -38,7 +29,7 @@ public class Login extends javax.swing.JPanel implements Authenticable{
     private List<JTextComponent> validationFields;
     private List<JLabel> errorLabels;
 
-    private Repository<AppUser> repository;
+    private UserService userService;
     
     /**
      * Creates new form Login
@@ -160,7 +151,7 @@ public class Login extends javax.swing.JPanel implements Authenticable{
         if(!formValid()) return;
         
         try {
-            Optional<String> optUserRole = authenticate(
+            Optional<String> optUserRole = userService.authenticate(
                     tfUsername.getText().trim(),
                     new String(pfPassword.getPassword()));
             
@@ -198,9 +189,9 @@ public class Login extends javax.swing.JPanel implements Authenticable{
 
     private void init() {
         try {
+            userService = new UserService();
             initValidation();
             hideErrors();
-            initRepository();
         } catch (Exception ex) {
             Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -219,10 +210,6 @@ public class Login extends javax.swing.JPanel implements Authenticable{
     private void hideErrors() {
         errorLabels.forEach(e -> e.setVisible(false));
     }
-
-    private void initRepository() throws Exception {
-        repository = RepositoryFactory.getRepository(RepoType.USER);
-    }
     
     private boolean formValid() {
         hideErrors();
@@ -234,29 +221,5 @@ public class Login extends javax.swing.JPanel implements Authenticable{
         }
         
         return ok;
-    }
-
-    private final String USERNAME = "Username";
-    private final String PASSWORD = "Password";
-    private final String ROLE = "Role";
-    private final String AUTHENTICATE_USER = "{ CALL authenticateUser (?,?) }";
-    
-    @Override
-    public Optional<String> authenticate(String username, String password) throws Exception {
-        DataSource dataSource = DataSourceSingleton.getInstance();
-
-        try (Connection conn = dataSource.getConnection(); CallableStatement stmt = conn.prepareCall(AUTHENTICATE_USER);) {
-            stmt.setString(USERNAME, username);
-            stmt.setString(PASSWORD, password);
-            try (ResultSet rs = stmt.executeQuery();) {
-                if (rs.next()) {
-                    return Optional.of(
-                            rs.getString(ROLE)
-                    );
-                }
-            }
-        }
-
-        return Optional.empty();
     }
 }

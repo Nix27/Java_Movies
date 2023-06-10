@@ -13,6 +13,7 @@ import hr.algebra.models.MovieActor;
 import hr.algebra.models.MovieDirector;
 import hr.algebra.models.enums.RepoType;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -47,21 +48,18 @@ public class MovieService {
         movieDirectorRepo = RepositoryFactory.getRepository(RepoType.MOVIE_DIRECTOR);
         movieActorRepo = RepositoryFactory.getRepository(RepoType.MOVIE_ACTOR);
     }
-    
-    public List<Movie> loadAllMovies() throws Exception{
+
+    public List<Movie> loadAllMovies() throws Exception {
         List<Movie> allMovies = movieRepo.selectAll();
-        List<Director> allDirectors = directorRepo.selectAll();
-        List<Actor> allActors = actorRepo.selectAll();
-        
+
         for (Movie movie : allMovies) {
-            
             movie.setDirectors(getDirectorsOfMovie(movie));
             movie.setActors(getActorsOfMovie(movie));
         }
-        
+
         return allMovies;
     }
-    
+
     public List<Director> getDirectorsOfMovie(Movie movie) throws Exception {
         List<Director> directors = new ArrayList<>();
 
@@ -101,8 +99,8 @@ public class MovieService {
 
         return actors;
     }
-    
-    public List<Movie> getAllMovies() throws Exception{
+
+    public List<Movie> getAllMovies() throws Exception {
         return movieRepo.selectAll();
     }
 
@@ -117,7 +115,7 @@ public class MovieService {
     public Optional<Movie> getMovie(int movieid) throws Exception {
         return movieRepo.selectSingle(movieid);
     }
-    
+
     public void createMovie(Movie movie, Set<Director> directors, Set<Actor> actors) throws Exception {
         int movieId = movieRepo.createSingle(movie);
 
@@ -259,5 +257,77 @@ public class MovieService {
         for (MovieActor movieActor : movieActors) {
             movieActorRepo.delete(movieActor.getId());
         }
+    }
+
+    public void createMoviesOnParse(Set<Movie> movies) throws Exception {
+        Set<Director> allDirectorsForDb = getADirectorsFromMovies(movies);
+        Set<Actor> allActorsForDb = getActorsFromMovies(movies);
+
+        List<Director> directorsFromDb = directorRepo.createMultiple(new ArrayList<>(allDirectorsForDb));
+        List<Actor> actorsFromDb = actorRepo.createMultiple(new ArrayList<>(allActorsForDb));
+
+        for (Movie movie : movies) {
+            int movieId = movieRepo.createSingle(movie);
+            createMovieDirectors(movieId, movie, directorsFromDb);
+            createMovieActors(movieId, movie, actorsFromDb);
+        }
+    }
+
+    private Set<Director> getADirectorsFromMovies(Set<Movie> movies) {
+        Set<Director> directors = new HashSet<>();
+
+        movies
+                .forEach(m -> m.getDirectors()
+                .forEach(directors::add));
+
+        return directors;
+    }
+
+    private Set<Actor> getActorsFromMovies(Set<Movie> movies) {
+        Set<Actor> actors = new HashSet<>();
+
+        movies
+                .forEach(m -> m.getActors()
+                .forEach(actors::add));
+
+        return actors;
+    }
+
+    private void createMovieDirectors(int movieId, Movie movie, List<Director> directorsFromDb) throws Exception {
+        int directorId;
+        List<MovieDirector> movieDirectors = new ArrayList<>();
+
+        for (Director director : movie.getDirectors()) {
+            for (Director directorFromDb : directorsFromDb) {
+                if (director.getFirstName().equals(directorFromDb.getFirstName()) && director.getLastName().equals(directorFromDb.getLastName())) {
+                    directorId = directorFromDb.getId();
+                    movieDirectors.add(new MovieDirector(movieId, directorId));
+                    break;
+                }
+            }
+        }
+
+        movieDirectorRepo.createMultiple(movieDirectors);
+    }
+
+    private void createMovieActors(int movieId, Movie movie, List<Actor> actorsFromDb) throws Exception {
+        int actorId;
+        List<MovieActor> movieActors = new ArrayList<>();
+
+        for (Actor actor : movie.getActors()) {
+            for (Actor actorFromDb : actorsFromDb) {
+                if (actor.getFirstName().equals(actorFromDb.getFirstName()) && actor.getLastName().equals(actorFromDb.getLastName())) {
+                    actorId = actorFromDb.getId();
+                    movieActors.add(new MovieActor(movieId, actorId));
+                    break;
+                }
+            }
+        }
+        
+        movieActorRepo.createMultiple(movieActors);
+    }
+    
+    public void deleteAll() throws Exception{
+        movieRepo.deleteAll();
     }
 }

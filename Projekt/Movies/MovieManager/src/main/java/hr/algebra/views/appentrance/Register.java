@@ -4,10 +4,8 @@
  */
 package hr.algebra.views.appentrance;
 
-import hr.algebra.dal.Repository;
-import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.models.AppUser;
-import hr.algebra.models.enums.RepoType;
+import hr.algebra.services.UserService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,7 +26,7 @@ public class Register extends javax.swing.JPanel {
     private List<JTextComponent> validationFields;
     private List<JLabel> errorLabels;
 
-    private Repository<AppUser> repository;
+    private UserService userService;
     
     /**
      * Creates new form Register
@@ -143,7 +141,7 @@ public class Register extends javax.swing.JPanel {
                 ROLE);
         
         try {
-            repository.createSingle(newUser);
+            userService.createUser(newUser);
             
             JTabbedPane parent = (JTabbedPane) SwingUtilities
                         .getAncestorOfClass(JTabbedPane.class, this);
@@ -174,9 +172,9 @@ public class Register extends javax.swing.JPanel {
 
     private void init() {
         try {
+            userService = new UserService();
             initValidation();
             hideErrors();
-            initRepository();
         } catch (Exception ex) {
             Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -194,10 +192,6 @@ public class Register extends javax.swing.JPanel {
 
     private void hideErrors() {
         errorLabels.forEach(e -> e.setVisible(false));
-    }
-
-    private void initRepository() throws Exception {
-        repository = RepositoryFactory.getRepository(RepoType.USER);
     }
     
     private boolean formValid() {

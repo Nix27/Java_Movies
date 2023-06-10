@@ -270,7 +270,6 @@ public class Directors extends javax.swing.JPanel {
     private void init() {
         try {
             directorService = new DirectorService();
-            
             initValidation();
             hideErrors();
             initTable();

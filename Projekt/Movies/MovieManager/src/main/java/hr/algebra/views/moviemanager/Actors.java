@@ -269,7 +269,6 @@ public class Actors extends javax.swing.JPanel {
     private void init() {
         try {
             actorService = new ActorService();
-            
             initValidation();
             hideErrors();
             initTable();

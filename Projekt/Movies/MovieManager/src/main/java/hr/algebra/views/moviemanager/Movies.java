@@ -39,6 +39,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.DropMode;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
+import javax.xml.bind.JAXBException;
 
 /**
  *
@@ -628,14 +629,20 @@ public class Movies extends javax.swing.JPanel {
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnSaveAllMoviesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveAllMoviesActionPerformed
-        try {
-            MovieArchive movieArchive = new MovieArchive(movieService.loadAllMovies());
-            JAXBUtils.save(movieArchive, FILENAME);
-            MessageUtils.showInformationMessage("Info", "Movies successfully saved");
-        } catch (Exception ex) {
-            MessageUtils.showInformationMessage("Info", "Unable to save movies");
-            Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Thread(() -> {
+            try {
+                MovieArchive movieArchive = new MovieArchive(movieService.loadAllMovies());
+                JAXBUtils.save(movieArchive, FILENAME);
+
+                java.awt.EventQueue.invokeLater(() -> {
+                    MessageUtils.showInformationMessage("Info", "Movies successfully saved");
+                });
+            } catch (JAXBException ex) {
+                Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }//GEN-LAST:event_btnSaveAllMoviesActionPerformed
 
 
@@ -700,7 +707,6 @@ public class Movies extends javax.swing.JPanel {
     private void init() {
         try {
             movieService = new MovieService();
-            
             initValidation();
             hideErrors();
             initTable();
@@ -772,11 +778,11 @@ public class Movies extends javax.swing.JPanel {
         selectedMovie = null;
         clearLists();
     }
-    
-    private void clearLists(){
+
+    private void clearLists() {
         directorsModel.clear();
         lsDirectors.setModel(directorsModel);
-        
+
         actorsModel.clear();
         lsActors.setModel(actorsModel);
     }
@@ -829,7 +835,7 @@ public class Movies extends javax.swing.JPanel {
 
                 selectedMovie.setDirectors(directors);
                 selectedMovie.setActors(actors);
-                
+
                 directorsSet = new TreeSet<>(directors);
                 actorsSet = new TreeSet<>(actors);
 
