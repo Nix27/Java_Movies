@@ -9,6 +9,7 @@
         <module>Dao</module>
         <module>Utilities</module>
         <module>MovieManager</module>
+        <module>ServiceLayer</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

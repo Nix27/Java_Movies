@@ -4,15 +4,12 @@
  */
 package hr.algebra.views.moviemanager;
 
-import hr.algebra.dal.Repository;
-import hr.algebra.dal.RepositoryFactory;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.text.JTextComponent;
 import hr.algebra.models.Director;
-import hr.algebra.models.MovieDirector;
-import hr.algebra.models.enums.RepoType;
+import hr.algebra.services.DirectorService;
 import hr.algebra.utilities.MessageUtils;
 import hr.algebra.view.models.DirectorTableModel;
 import java.util.Optional;
@@ -29,8 +26,7 @@ public class Directors extends javax.swing.JPanel {
     private List<JTextComponent> validationFields;
     private List<JLabel> errorLabels;
 
-    private Repository<Director> directorRepo;
-    private Repository<MovieDirector> movieDirectorRepo;
+    private DirectorService directorService;
 
     private DirectorTableModel directorTableModel;
 
@@ -208,8 +204,8 @@ public class Directors extends javax.swing.JPanel {
                     tfLast.getText().trim()
             );
 
-            directorRepo.createSingle(director);
-            directorTableModel.setDirectors(directorRepo.selectAll());
+            directorService.createDirector(director);
+            directorTableModel.setDirectors(directorService.getAllDirectors());
             clearForm();
         } catch (Exception ex) {
             Logger.getLogger(Directors.class.getName()).log(Level.SEVERE, null, ex);
@@ -229,7 +225,7 @@ public class Directors extends javax.swing.JPanel {
         try {
             updateSelectedDirector(selectedDirector);
 
-            directorTableModel.setDirectors(directorRepo.selectAll());
+            directorTableModel.setDirectors(directorService.getAllDirectors());
             clearForm();
         } catch (Exception ex) {
             Logger.getLogger(Directors.class.getName()).log(Level.SEVERE, null, ex);
@@ -246,12 +242,8 @@ public class Directors extends javax.swing.JPanel {
             
             
             try {
-                List<MovieDirector> movieDirectors = movieDirectorRepo.selectAll();
-                deleteMovieDirectors(movieDirectors);
-                
-                directorRepo.delete(selectedDirector.getId());
-                
-                directorTableModel.setDirectors(directorRepo.selectAll());
+                directorService.deleteDirector(selectedDirector);
+                directorTableModel.setDirectors(directorService.getAllDirectors());
                 clearForm();
             } catch (Exception ex) {
                 Logger.getLogger(Directors.class.getName()).log(Level.SEVERE, null, ex);
@@ -277,9 +269,10 @@ public class Directors extends javax.swing.JPanel {
 
     private void init() {
         try {
+            directorService = new DirectorService();
+            
             initValidation();
             hideErrors();
-            initRepository();
             initTable();
         } catch (Exception ex) {
             Logger.getLogger(Directors.class.getName()).log(Level.SEVERE, null, ex);
@@ -300,17 +293,12 @@ public class Directors extends javax.swing.JPanel {
         errorLabels.forEach(e -> e.setVisible(false));
     }
 
-    private void initRepository() throws Exception {
-        directorRepo = RepositoryFactory.getRepository(RepoType.DIRECTOR);
-        movieDirectorRepo = RepositoryFactory.getRepository(RepoType.MOVIE_DIRECTOR);
-    }
-
     private void initTable() throws Exception {
         tblDirectors.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tblDirectors.setAutoCreateRowSorter(true);
         tblDirectors.setRowHeight(25);
         
-        directorTableModel = new DirectorTableModel(directorRepo.selectAll());
+        directorTableModel = new DirectorTableModel(directorService.getAllDirectors());
         tblDirectors.setModel(directorTableModel);
     }
 
@@ -341,7 +329,7 @@ public class Directors extends javax.swing.JPanel {
         int selectedDirectorId = (int) directorTableModel.getValueAt(rowIndex, 0);
 
         try {
-            Optional<Director> optDirector = directorRepo.selectSingle(selectedDirectorId);
+            Optional<Director> optDirector = directorService.getDirector(selectedDirectorId);
 
             if (optDirector.isPresent()) {
                 selectedDirector = optDirector.get();
@@ -361,14 +349,6 @@ public class Directors extends javax.swing.JPanel {
         selectedDirector.setFirstName(tfFirst.getText().trim());
         selectedDirector.setLastName(tfLast.getText().trim());
 
-        directorRepo.update(selectedDirector.getId(), selectedDirector);
-    }
-
-    private void deleteMovieDirectors(List<MovieDirector> movieDirectors) throws Exception {
-        for (MovieDirector movieDirector : movieDirectors) {
-            if(movieDirector.getDirectorId() == selectedDirector.getId()){
-                movieDirectorRepo.delete(movieDirector.getId());
-            }
-        }
+        directorService.updateDirector(selectedDirector);
     }
 }

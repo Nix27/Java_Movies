@@ -6,7 +6,6 @@ package hr.algebra.views.appentrance;
 
 import hr.algebra.dal.Repository;
 import hr.algebra.dal.RepositoryFactory;
-import hr.algebra.models.Actor;
 import hr.algebra.models.AppUser;
 import hr.algebra.models.enums.RepoType;
 import java.util.Arrays;

@@ -4,11 +4,8 @@
  */
 package hr.algebra.views.moviemanager;
 
-import hr.algebra.dal.Repository;
-import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.models.Actor;
-import hr.algebra.models.MovieActor;
-import hr.algebra.models.enums.RepoType;
+import hr.algebra.services.ActorService;
 import hr.algebra.utilities.MessageUtils;
 import hr.algebra.view.models.ActorTableModel;
 import java.util.Arrays;
@@ -29,8 +26,7 @@ public class Actors extends javax.swing.JPanel {
     private List<JTextComponent> validationFields;
     private List<JLabel> errorLabels;
 
-    private Repository<Actor> actorRepo;
-    private Repository<MovieActor> movieActorRepo;
+    private ActorService actorService;
 
     private ActorTableModel actorTableModel;
 
@@ -208,8 +204,8 @@ public class Actors extends javax.swing.JPanel {
                     tfLast.getText().trim()
             );
 
-            actorRepo.createSingle(actor);
-            actorTableModel.setActors(actorRepo.selectAll());
+            actorService.createActor(actor);
+            actorTableModel.setActors(actorService.getAllActors());
             clearForm();
         } catch (Exception ex) {
             Logger.getLogger(Actors.class.getName()).log(Level.SEVERE, null, ex);
@@ -228,8 +224,7 @@ public class Actors extends javax.swing.JPanel {
 
         try {
             updateSelectedActor(selectedActor);
-
-            actorTableModel.setActors(actorRepo.selectAll());
+            actorTableModel.setActors(actorService.getAllActors());
             clearForm();
         } catch (Exception ex) {
             Logger.getLogger(Actors.class.getName()).log(Level.SEVERE, null, ex);
@@ -246,12 +241,8 @@ public class Actors extends javax.swing.JPanel {
             
             
             try {
-                List<MovieActor> movieActors = movieActorRepo.selectAll();
-                deleteMovieActors(movieActors);
-                
-                actorRepo.delete(selectedActor.getId());
-                
-                actorTableModel.setActors(actorRepo.selectAll());
+                actorService.deleteActor(selectedActor);
+                actorTableModel.setActors(actorService.getAllActors());
                 clearForm();
             } catch (Exception ex) {
                 Logger.getLogger(Directors.class.getName()).log(Level.SEVERE, null, ex);
@@ -277,9 +268,10 @@ public class Actors extends javax.swing.JPanel {
 
     private void init() {
         try {
+            actorService = new ActorService();
+            
             initValidation();
             hideErrors();
-            initRepository();
             initTable();
         } catch (Exception ex) {
             Logger.getLogger(Actors.class.getName()).log(Level.SEVERE, null, ex);
@@ -300,17 +292,12 @@ public class Actors extends javax.swing.JPanel {
         errorLabels.forEach(e -> e.setVisible(false));
     }
 
-    private void initRepository() throws Exception {
-        actorRepo = RepositoryFactory.getRepository(RepoType.ACTOR);
-        movieActorRepo = RepositoryFactory.getRepository(RepoType.MOVIE_ACTOR);
-    }
-
     private void initTable() throws Exception {
         tblActors.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tblActors.setAutoCreateRowSorter(true);
         tblActors.setRowHeight(25);
         
-        actorTableModel = new ActorTableModel(actorRepo.selectAll());
+        actorTableModel = new ActorTableModel(actorService.getAllActors());
         tblActors.setModel(actorTableModel);
     }
     
@@ -341,7 +328,7 @@ public class Actors extends javax.swing.JPanel {
         int selectedActorId = (int) actorTableModel.getValueAt(rowIndex, 0);
 
         try {
-            Optional<Actor> optActor = actorRepo.selectSingle(selectedActorId);
+            Optional<Actor> optActor = actorService.getActor(selectedActorId);
 
             if (optActor.isPresent()) {
                 selectedActor = optActor.get();
@@ -361,14 +348,6 @@ public class Actors extends javax.swing.JPanel {
         selectedActor.setFirstName(tfFirst.getText().trim());
         selectedActor.setLastName(tfLast.getText().trim());
 
-        actorRepo.update(selectedActor.getId(), selectedActor);
-    }
-
-    private void deleteMovieActors(List<MovieActor> movieActors) throws Exception {
-        for (MovieActor movieActor : movieActors) {
-            if(movieActor.getActorId() == selectedActor.getId()){
-                movieActorRepo.delete(movieActor.getId());
-            }
-        }
+        actorService.updateActor(selectedActor);
     }
 }

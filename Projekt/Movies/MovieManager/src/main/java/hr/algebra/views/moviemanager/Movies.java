@@ -4,17 +4,13 @@
  */
 package hr.algebra.views.moviemanager;
 
-import hr.algebra.dal.Repository;
-import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.models.Actor;
 import hr.algebra.models.ActorTransferable;
 import hr.algebra.models.Director;
 import hr.algebra.models.DirectorTransferable;
 import hr.algebra.models.Movie;
-import hr.algebra.models.MovieActor;
 import hr.algebra.models.MovieArchive;
-import hr.algebra.models.MovieDirector;
-import hr.algebra.models.enums.RepoType;
+import hr.algebra.services.MovieService;
 import hr.algebra.utilities.FileUtils;
 import hr.algebra.utilities.IconUtils;
 import hr.algebra.utilities.JAXBUtils;
@@ -27,7 +23,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +35,6 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
-import java.util.stream.Collectors;
 import javax.swing.DefaultListModel;
 import javax.swing.DropMode;
 import javax.swing.JComponent;
@@ -58,11 +52,7 @@ public class Movies extends javax.swing.JPanel {
     private List<JTextComponent> validationFields;
     private List<JLabel> errorLabels;
 
-    private Repository<Movie> movieRepo;
-    private Repository<Director> directorRepo;
-    private Repository<Actor> actorRepo;
-    private Repository<MovieDirector> movieDirectorRepo;
-    private Repository<MovieActor> movieActorRepo;
+    private MovieService movieService;
 
     private MovieTableModel movieTableModel;
 
@@ -560,17 +550,8 @@ public class Movies extends javax.swing.JPanel {
                     tfTrailer.getText().trim()
             );
 
-            int movieId = movieRepo.createSingle(movie);
-
-            if (!directorsSet.isEmpty()) {
-                addMovieDirectors(movieId);
-            }
-
-            if (!actorsSet.isEmpty()) {
-                addMovieActors(movieId);
-            }
-
-            movieTableModel.setMovies(movieRepo.selectAll());
+            movieService.createMovie(movie, directorsSet, actorsSet);
+            movieTableModel.setMovies(movieService.getAllMovies());
             clearForm();
         } catch (IOException ex) {
             Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
@@ -611,10 +592,7 @@ public class Movies extends javax.swing.JPanel {
 
         try {
             updateSelectedMovie(selectedMovie);
-            updateMovieDirectorRelations();
-            updateMovieActorRelations();
-
-            movieTableModel.setMovies(movieRepo.selectAll());
+            movieTableModel.setMovies(movieService.getAllMovies());
             clearForm();
         } catch (IOException ex) {
             Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
@@ -632,21 +610,13 @@ public class Movies extends javax.swing.JPanel {
         if (MessageUtils.showConfirmDialog("Delete movie", "Are you sure you want to delete the movie?")) {
 
             try {
-                int movieId = selectedMovie.getId();
-
-                List<MovieDirector> movieDirectors = movieDirectorRepo.selectMultiple(movieId);
-                deleteMovieDirectors(movieDirectors);
-
-                List<MovieActor> movieActors = movieActorRepo.selectMultiple(movieId);
-                deleteMovieActors(movieActors);
-
-                movieRepo.delete(movieId);
+                movieService.deleteMovie(selectedMovie.getId());
 
                 if (selectedMovie.getPoster() != null) {
                     Files.deleteIfExists(Paths.get(selectedMovie.getPoster()));
                 }
 
-                movieTableModel.setMovies(movieRepo.selectAll());
+                movieTableModel.setMovies(movieService.getAllMovies());
                 clearForm();
             } catch (IOException ex) {
                 Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
@@ -659,7 +629,7 @@ public class Movies extends javax.swing.JPanel {
 
     private void btnSaveAllMoviesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveAllMoviesActionPerformed
         try {
-            MovieArchive movieArchive = loadMovies();
+            MovieArchive movieArchive = new MovieArchive(movieService.loadAllMovies());
             JAXBUtils.save(movieArchive, FILENAME);
             MessageUtils.showInformationMessage("Info", "Movies successfully saved");
         } catch (Exception ex) {
@@ -729,9 +699,10 @@ public class Movies extends javax.swing.JPanel {
 
     private void init() {
         try {
+            movieService = new MovieService();
+            
             initValidation();
             hideErrors();
-            initRepository();
             initTable();
             initDragAndDrop();
             loadListsForAllDDirectorsAndActors();
@@ -755,20 +726,12 @@ public class Movies extends javax.swing.JPanel {
         errorLabels.forEach(e -> e.setVisible(false));
     }
 
-    private void initRepository() throws Exception {
-        movieRepo = RepositoryFactory.getRepository(RepoType.MOVIE);
-        directorRepo = RepositoryFactory.getRepository(RepoType.DIRECTOR);
-        actorRepo = RepositoryFactory.getRepository(RepoType.ACTOR);
-        movieDirectorRepo = RepositoryFactory.getRepository(RepoType.MOVIE_DIRECTOR);
-        movieActorRepo = RepositoryFactory.getRepository(RepoType.MOVIE_ACTOR);
-    }
-
     private void initTable() throws Exception {
         tblMovies.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tblMovies.setAutoCreateRowSorter(true);
         tblMovies.setRowHeight(25);
 
-        movieTableModel = new MovieTableModel(movieRepo.selectAll());
+        movieTableModel = new MovieTableModel(movieService.getAllMovies());
         tblMovies.setModel(movieTableModel);
     }
 
@@ -838,8 +801,8 @@ public class Movies extends javax.swing.JPanel {
     }
 
     private void loadListsForAllDDirectorsAndActors() throws Exception {
-        List<Director> allDirectors = directorRepo.selectAll();
-        List<Actor> allActors = actorRepo.selectAll();
+        List<Director> allDirectors = movieService.getAllDirectors();
+        List<Actor> allActors = movieService.getAllActors();
 
         allDirectorsModel.clear();
         allDirectors.forEach(allDirectorsModel::addElement);
@@ -858,17 +821,17 @@ public class Movies extends javax.swing.JPanel {
         int selectedMovieId = (int) movieTableModel.getValueAt(rowIndex, 0);
 
         try {
-            Optional<Movie> optMovie = movieRepo.selectSingle(selectedMovieId);
+            Optional<Movie> optMovie = movieService.getMovie(selectedMovieId);
             if (optMovie.isPresent()) {
                 selectedMovie = optMovie.get();
-                List<Director> directors = getDirectors(selectedMovie);
-                List<Actor> actors = getActors(selectedMovie);
-
-                directorsSet = new TreeSet<>(directors);
-                actorsSet = new TreeSet<>(actors);
+                List<Director> directors = movieService.getDirectorsOfMovie(selectedMovie);
+                List<Actor> actors = movieService.getActorsOfMovie(selectedMovie);
 
                 selectedMovie.setDirectors(directors);
                 selectedMovie.setActors(actors);
+                
+                directorsSet = new TreeSet<>(directors);
+                actorsSet = new TreeSet<>(actors);
 
                 fillForm(selectedMovie);
             }
@@ -896,46 +859,6 @@ public class Movies extends javax.swing.JPanel {
 
         loadDirectorsModel();
         loadActorsModel();
-    }
-
-    private List<Director> getDirectors(Movie selectedMovie) throws Exception {
-        List<Director> directors = new ArrayList<>();
-
-        int movieId = selectedMovie.getId();
-        List<MovieDirector> movieDirectors = movieDirectorRepo.selectMultiple(movieId);
-        List<Integer> directorIds = movieDirectors.stream()
-                .map(d -> d.getDirectorId())
-                .collect(Collectors.toList());
-
-        directorIds.forEach(id -> {
-            try {
-                directors.add(directorRepo.selectSingle(id).get());
-            } catch (Exception ex) {
-                Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-
-        return directors;
-    }
-
-    private List<Actor> getActors(Movie selectedMovie) throws Exception {
-        List<Actor> actors = new ArrayList<>();
-
-        int movieId = selectedMovie.getId();
-        List<MovieActor> movieActors = movieActorRepo.selectMultiple(movieId);
-        List<Integer> actorIds = movieActors.stream()
-                .map(a -> a.getActorId())
-                .collect(Collectors.toList());
-
-        actorIds.forEach(id -> {
-            try {
-                actors.add(actorRepo.selectSingle(id).get());
-            } catch (Exception ex) {
-                Logger.getLogger(Movies.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-
-        return actors;
     }
 
     private void loadDirectorsModel() {
@@ -966,26 +889,6 @@ public class Movies extends javax.swing.JPanel {
         lsActors.setTransferHandler(new ActorImportTransferHandler());
     }
 
-    private void addMovieDirectors(int movieId) throws Exception {
-        List<MovieDirector> movieDirectors = new ArrayList<>();
-
-        for (Director director : directorsSet) {
-            movieDirectors.add(new MovieDirector(movieId, director.getId()));
-        }
-
-        movieDirectorRepo.createMultiple(movieDirectors);
-    }
-
-    private void addMovieActors(int movieId) throws Exception {
-        List<MovieActor> movieActors = new ArrayList<>();
-
-        for (Actor actor : actorsSet) {
-            movieActors.add(new MovieActor(movieId, actor.getId()));
-        }
-
-        movieActorRepo.createMultiple(movieActors);
-    }
-
     private void updateSelectedMovie(Movie selectedMovie) throws IOException, Exception {
         if (!tfPoster.getText().trim().equals(selectedMovie.getPoster())) {
             if (selectedMovie.getPoster() != null) {
@@ -1007,135 +910,7 @@ public class Movies extends javax.swing.JPanel {
         selectedMovie.setReservation(tfReservation.getText().trim());
         selectedMovie.setTrailer(tfTrailer.getText().trim());
 
-        movieRepo.update(selectedMovie.getId(), selectedMovie);
-    }
-
-    private void updateMovieDirectorRelations() throws Exception {
-        List<MovieDirector> movieDirectors = movieDirectorRepo.selectMultiple(selectedMovie.getId());
-
-        List<Integer> directorIdsFromDb = movieDirectors
-                .stream()
-                .map(md -> md.getDirectorId())
-                .collect(Collectors.toList());
-
-        List<Integer> directorIdsFromList = directorsSet
-                .stream()
-                .map(d -> d.getId())
-                .collect(Collectors.toList());
-
-        deleteOldMovieDirectorRelations(movieDirectors, directorIdsFromDb, directorIdsFromList);
-        createNewMovieDirectorRelations(movieDirectors, directorIdsFromDb, directorIdsFromList);
-    }
-
-    private void deleteOldMovieDirectorRelations(List<MovieDirector> movieDirectors, List<Integer> directorIdsFromDb, List<Integer> directorIdsFromList) throws Exception, Exception {
-        List<Integer> directorIdsFromDbCopy = new ArrayList<>(directorIdsFromDb);
-        directorIdsFromDbCopy.removeAll(directorIdsFromList);
-
-        if (!directorIdsFromDbCopy.isEmpty()) {
-            for (MovieDirector movieDirector : movieDirectors) {
-                if (directorIdsFromDbCopy.contains(movieDirector.getDirectorId())) {
-                    movieDirectorRepo.delete(movieDirector.getId());
-                }
-            }
-        }
-    }
-
-    private void createNewMovieDirectorRelations(List<MovieDirector> movieDirectors, List<Integer> directorIdsFromDb, List<Integer> directorIdsFromList) throws Exception {
-        List<Integer> directorsIdsFromListCopy = new ArrayList<>(directorIdsFromList);
-        directorsIdsFromListCopy.removeAll(directorIdsFromDb);
-
-        if (!directorsIdsFromListCopy.isEmpty()) {
-            for (Integer directorId : directorsIdsFromListCopy) {
-                movieDirectorRepo.createSingle(new MovieDirector(selectedMovie.getId(), directorId));
-            }
-        }
-    }
-
-    private void updateMovieActorRelations() throws Exception {
-        List<MovieActor> movieActors = movieActorRepo.selectMultiple(selectedMovie.getId());
-
-        List<Integer> actorIdsFromDb = movieActors
-                .stream()
-                .map(ma -> ma.getActorId())
-                .collect(Collectors.toList());
-
-        List<Integer> actorIdsFromList = actorsSet
-                .stream()
-                .map(a -> a.getId())
-                .collect(Collectors.toList());
-
-        deleteOldMovieActorRelations(movieActors, actorIdsFromDb, actorIdsFromList);
-        createNewMovieActorRelations(movieActors, actorIdsFromDb, actorIdsFromList);
-    }
-
-    private void deleteOldMovieActorRelations(List<MovieActor> movieActors, List<Integer> actorIdsFromDb, List<Integer> actorIdsFromList) throws Exception {
-        List<Integer> actorIdsFromDbCopy = new ArrayList<>(actorIdsFromDb);
-        actorIdsFromDbCopy.removeAll(actorIdsFromList);
-
-        if (!actorIdsFromDbCopy.isEmpty()) {
-            for (MovieActor movieActor : movieActors) {
-                if (actorIdsFromDbCopy.contains(movieActor.getActorId())) {
-                    movieActorRepo.delete(movieActor.getId());
-                }
-            }
-        }
-    }
-
-    private void createNewMovieActorRelations(List<MovieActor> movieActors, List<Integer> actorIdsFromDb, List<Integer> actorIdsFromList) throws Exception {
-        List<Integer> actorsIdsFromListCopy = new ArrayList<>(actorIdsFromList);
-        actorsIdsFromListCopy.removeAll(actorIdsFromDb);
-
-        if (!actorsIdsFromListCopy.isEmpty()) {
-            for (Integer actorId : actorsIdsFromListCopy) {
-                movieActorRepo.createSingle(new MovieActor(selectedMovie.getId(), actorId));
-            }
-        }
-    }
-
-    private void deleteMovieDirectors(List<MovieDirector> movieDirectors) throws Exception {
-        for (MovieDirector movieDirector : movieDirectors) {
-            movieDirectorRepo.delete(movieDirector.getId());
-        }
-    }
-
-    private void deleteMovieActors(List<MovieActor> movieActors) throws Exception {
-        for (MovieActor movieActor : movieActors) {
-            movieActorRepo.delete(movieActor.getId());
-        }
-    }
-
-    private MovieArchive loadMovies() throws Exception {
-        List<Movie> allMovies = movieRepo.selectAll();
-        List<Director> allDirectors = directorRepo.selectAll();
-        List<Actor> allActors = actorRepo.selectAll();
-        
-        for (Movie movie : allMovies) {
-            List<MovieDirector> movieDirectors = movieDirectorRepo.selectMultiple(movie.getId());
-            List<Director> directors = new ArrayList<>();
-            for (MovieDirector movieDirector : movieDirectors) {
-                Optional<Director> optDirector = directorRepo.selectSingle(movieDirector.getDirectorId());
-                if(optDirector.isPresent()){
-                    directors.add(optDirector.get());
-                }
-            }
-            
-            movie.setDirectors(directors);
-        }
-        
-        for (Movie movie : allMovies) {
-            List<MovieActor> movieActors = movieActorRepo.selectMultiple(movie.getId());
-            List<Actor> actors = new ArrayList<>();
-            for (MovieActor movieActor : movieActors) {
-                Optional<Actor> optActor = actorRepo.selectSingle(movieActor.getActorId());
-                if(optActor.isPresent()){
-                    actors.add(optActor.get());
-                }
-            }
-            
-            movie.setActors(actors);
-        }
-        
-        return new MovieArchive(allMovies);
+        movieService.updateMovie(selectedMovie, directorsSet, actorsSet);
     }
 
     private class DirectorExportTransferHandler extends TransferHandler {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <movies>
     <movie>
-        <id>149</id>
+        <id>1</id>
         <title>Indiana Jones i artefakt sudbine</title>
         <published_date>2023-06-27T22:00:00</published_date>
         <description>Harrison Ford se vraća u ulozi najpoznatijeg profesora arheologije u petom filmu kultne franšize čija je radnja smještena u kasne šezdesete godine prošlog stoljeća, a čitava je priča povezana sa svemirskim programom.</description>
@@ -9,88 +9,89 @@
         <duration>154</duration>
         <year_of_release>2023</year_of_release>
         <genre>akcija, avantura</genre>
-        <poster>assets\1dbb439b-c96b-456c-b451-a1ec46c5cb61.jpg</poster>
+        <poster>assets\3f7af444-929b-4447-b375-b431f6f920b2.jpg</poster>
         <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/indiana-jones-i-artefakt-sudbine/8612/20230628</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
         <trailer>INDIANA_HR.mp4</trailer>
         <directors>
             <director>
-                <id>299</id>
+                <id>12</id>
                 <firstname>James</firstname>
                 <lastname>Mangold</lastname>
             </director>
         </directors>
         <actors>
             <actor>
-                <id>639</id>
+                <id>10</id>
                 <firstname>Harrison</firstname>
                 <lastname>Ford</lastname>
             </actor>
             <actor>
-                <id>665</id>
+                <id>42</id>
                 <firstname>Mads</firstname>
                 <lastname>Mikkelsen</lastname>
             </actor>
             <actor>
-                <id>654</id>
+                <id>28</id>
                 <firstname>Antonio</firstname>
                 <lastname>Banderas</lastname>
             </actor>
             <actor>
-                <id>635</id>
-                <firstname>Phoebe</firstname>
-                <lastname>Waller-Bridge</lastname>
+                <id>1</id>
+                <firstname>Jason</firstname>
+                <lastname>Statham</lastname>
             </actor>
         </actors>
     </movie>
     <movie>
-        <id>150</id>
+        <id>2</id>
         <title>Mala sirena - sink</title>
-        <published_date>2023-06-05T22:00:00</published_date>
+        <published_date>2023-06-07T22:00:00</published_date>
         <description>Dugoočekivani i Oscarom nagrađeni glazbeni klasik studija Disney ove godine dolazi u igranoj verziji priče o djevojci iz mora koja zbog ljubavi odlučuje napustiti svoj bajkoviti podvodni svijet.
-Najmlađa kćer kralja Tritona, Ariel, žudi saznati više o svijetu s druge strane mora, a dok obilazi površinu, zaljubljuje se u poletnog princa Erica. Dok je sirenama zabranjeno komunicirati s ljudima, Ariel mora slijediti svoje srce. Sklapa dogovor sa zlom morskom vješticom Ursulom, što joj daje priliku da iskusi život na kopnu, ali naposljetku dovodi svoj život – i očevu krunu – u opasnost.</description>
+Najmlađa kćer kralja Tritona, Ariel, žudi saznati više o svijetu s druge strane mora, a dok obilazi površinu, zaljubljuje se u poletnog princa Erica. Dok je sirenama zabranjeno komunicirati s ljudima, Ariel mora slijediti svoje srce. Sklapa dogovor sa zlom morskom vješticom Ursulom, što joj daje priliku da iskusi život na kopnu, ali naposljetku dovodi svoj život – i očevu krunu – u opasnost.
+</description>
         <original_title>Little Mermaid</original_title>
         <duration>135</duration>
         <year_of_release>2023</year_of_release>
         <genre>avantura</genre>
-        <poster>assets\fd9a3ae3-f212-47eb-aad4-50dd420dfe9d.jpg</poster>
-        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/mala-sirena-sink/8570/20230606</link>
+        <poster>assets\6a49e390-2783-4f95-adef-0b9ce55094a9.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/mala-sirena-sink/8570/20230608</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
         <trailer>LITTLE_MERMAID_SINK.mp4</trailer>
         <directors>
             <director>
-                <id>294</id>
-                <firstname>Pete</firstname>
-                <lastname>Docter</lastname>
+                <id>4</id>
+                <firstname>Rob</firstname>
+                <lastname>Marshall</lastname>
             </director>
         </directors>
         <actors>
             <actor>
-                <id>641</id>
+                <id>14</id>
                 <firstname>Halle</firstname>
                 <lastname>Bailey</lastname>
             </actor>
             <actor>
-                <id>636</id>
+                <id>7</id>
                 <firstname>Melissa</firstname>
                 <lastname>McCarthy</lastname>
             </actor>
             <actor>
-                <id>644</id>
+                <id>17</id>
                 <firstname>Jonah</firstname>
                 <lastname>Hauer-King</lastname>
             </actor>
             <actor>
-                <id>645</id>
+                <id>18</id>
                 <firstname>Javier</firstname>
                 <lastname>Bardem</lastname>
             </actor>
         </actors>
     </movie>
     <movie>
-        <id>151</id>
+        <id>3</id>
         <title>Praznici na talijanski</title>
-        <published_date>2023-06-05T22:00:00</published_date>
+        <published_date>2023-06-07T22:00:00</published_date>
         <description>Sebastian Maniscalco udružuje snage s legendarnim Amerikancem talijanskog porijekla i dvostrukim dobitnikom Oscara®, Robertom De Nirom, u novoj urnebesnoj komediji o obitelji u kojoj će se svatko od nas prepoznati.
 Radnja se vrti oko Sebastiana kojeg njegova zaručnica ohrabruje da dovede svog oca, frizera Salva (De Niro), na praznično druženje sa svojom superbogatom i izuzetno ekscentričnom obitelji (Kim Cattrall, Anders Holm, Brett Dier, David Rasche). Vikend se razvija u nešto što se može opisati samo kao "sukob kultura", ostavljajući Sebastiana i Salva da na malo teži naćin otkriju kako je sjajna stvar u obitelji, zapravo sve.
 </description>
@@ -98,78 +99,63 @@ Radnja se vrti oko Sebastiana kojeg njegova zaručnica ohrabruje da dovede svog 
         <duration>89</duration>
         <year_of_release>2023</year_of_release>
         <genre>komedija</genre>
-        <poster>assets\83d9e941-dce0-4b99-b832-6d9388e564ca.jpg</poster>
-        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/praznici-na-talijanski/8722/20230606</link>
+        <poster>assets\13d2ee1b-08d6-49bc-a71f-4c6e581221af.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/praznici-na-talijanski/8722/20230608</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
         <trailer>ABOUT_MY_FATHER_HR_novi.mp4</trailer>
         <directors>
             <director>
-                <id>291</id>
+                <id>1</id>
                 <firstname>Laura</firstname>
                 <lastname>Terruso</lastname>
             </director>
         </directors>
         <actors>
             <actor>
-                <id>672</id>
+                <id>48</id>
                 <firstname>Robert</firstname>
                 <lastname>De Niro</lastname>
             </actor>
             <actor>
-                <id>634</id>
+                <id>5</id>
                 <firstname>Kim</firstname>
                 <lastname>Cattrall</lastname>
             </actor>
             <actor>
-                <id>653</id>
+                <id>27</id>
                 <firstname>Sebastian</firstname>
                 <lastname>Maniscalco</lastname>
             </actor>
         </actors>
     </movie>
     <movie>
-        <id>152</id>
-        <title>Ponovno ljubav</title>
-        <published_date>2023-06-05T22:00:00</published_date>
-        <description>
-Što ako vas nasumična SMS poruka dovede do ljubavi vašeg života? U ovoj romantičnoj komediji, suočavajući se s gubitkom zaručnika, Mira Ray šalje niz romantičnih poruka na njegov stari broj mobitela... ne shvaćajući da je broj dodijeljen novom službenom telefonu Roba Burnsa. Novinar, Rob je očaran iskrenošću u prelijepo ispovjednim tekstovima. Kad dobije zadatak da napiše profil megazvijezde Celine Dion (glumi samu sebe u svojoj prvoj filmskoj ulozi), traži njezinu pomoć da smisli kako osobno upoznati Miru... i osvojiti njezino srce.
-
+        <id>4</id>
+        <title>Marmaduke: Buntovnik na četiri noge - sink</title>
+        <published_date>2023-06-09T22:00:00</published_date>
+        <description>Poznati stripovski junak, pas Marmaduke stiže na velike ekrane! Legendarni trener pasa vjeruje da ga može pretvoriti iz nedisciplinirane, ali simpatične njemačke doge u sljedećeg prvaka Svjetske izložbe pasa.
+Naš junak je simpatična (ali izvan kontrole) njemačka doga koja je najsretnija kada se zabavlja sa svojom obitelji, Winslowima, pogotovo kada se igra „kauboja“ s devetogodišnjim Billyjem. No, koliko god se trudili, čini se da Winslowi jednostavno ne mogu spriječiti Marmadukea od njegovih tendencija da se uvali u nevolju.
+Kada jedan od Marmadukeovih epskih neuspjeha postane viralan, ta video snimka privuče pažnju poznatog trenera kojeg zaokupi izazov pretvoriti Marmadukea u prvaka Svjetske izložbe pasa.
+Uslijedit će burna pustolovina, iako ne na način na koji su svi očekivali. Na kraju će Marmaduke i Winslowi shvatiti da najvažnija stvar u životu nije pobjeđivati, nego ostati vjeran sebi i onima koje voliš.
 </description>
-        <original_title>Love Again</original_title>
-        <duration>104</duration>
+        <original_title>Marmaduke</original_title>
+        <duration>88</duration>
         <year_of_release>2023</year_of_release>
-        <genre>romantična komedija</genre>
-        <poster>assets\dbc657eb-e400-41ea-bcce-03bb21c58167.jpg</poster>
-        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/ponovno-ljubav/8757/20230606</link>
+        <genre>animirani</genre>
+        <poster>assets\bee56ec4-aef1-4702-8493-7104cef13f6d.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/marmaduke-buntovnik-na-cetiri-noge-sink/8565/20230610</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
-        <trailer>LOVE_AGAIN_HR.mp4</trailer>
+        <trailer>MARMADUKE_HR.mp4</trailer>
         <directors>
             <director>
-                <id>298</id>
-                <firstname>James</firstname>
-                <lastname>C. Strouse</lastname>
+                <id>5</id>
+                <firstname>Mark</firstname>
+                <lastname>A.Z. Dippé</lastname>
             </director>
         </directors>
-        <actors>
-            <actor>
-                <id>649</id>
-                <firstname>Priyanka</firstname>
-                <lastname>Chopra Jonas</lastname>
-            </actor>
-            <actor>
-                <id>651</id>
-                <firstname>Sam</firstname>
-                <lastname>Heughan</lastname>
-            </actor>
-            <actor>
-                <id>642</id>
-                <firstname>Celine</firstname>
-                <lastname>Dion</lastname>
-            </actor>
-        </actors>
+        <actors/>
     </movie>
     <movie>
-        <id>153</id>
+        <id>5</id>
         <title>Trubadur</title>
         <published_date>2023-06-12T22:00:00</published_date>
         <description>Strasti su uzburkane dok se Manrico i grof di Luna natječu za Leonorinu naklonost. Manricova majka Azucena desetljećima je čuvala strašnu tajnu. Uskoro će se prokletstvo iz prošlosti dići iz pepela s razornim posljedicama za sve njih.
@@ -179,13 +165,13 @@ S Ludovicom Tézierom i Jamiejem Bartonom u glavnim ulogama, energično uprizore
         <duration>205</duration>
         <year_of_release>2023</year_of_release>
         <genre>opera</genre>
-        <poster>assets\4fc62aeb-f999-4e95-b8bf-a5b0c8020fc3.jpg</poster>
+        <poster>assets\049fde3a-b5a9-4944-8ce6-196589f3d6ce.jpg</poster>
         <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/trubadur/8330/20230613</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
-        <trailer>ROH SPEKTAKLI 2022 2023 BIH PL.mp4</trailer>
+        <trailer>PLAZME ROH TRUBADUR BIH.mp4</trailer>
         <directors>
             <director>
-                <id>297</id>
+                <id>11</id>
                 <firstname>Adele</firstname>
                 <lastname>Thomas</lastname>
             </director>
@@ -193,46 +179,7 @@ S Ludovicom Tézierom i Jamiejem Bartonom u glavnim ulogama, energično uprizore
         <actors/>
     </movie>
     <movie>
-        <id>154</id>
-        <title>Na krilima časti</title>
-        <published_date>2023-06-05T22:00:00</published_date>
-        <description>Film je inspiriran nevjerojatno potresnom istinitom pričom o dvojici elitnih borbenih pilota američke mornarice koji na kraju postanu najslavniji vojnici mornarice tijekom „zaboravljenog” Korejskog rata. Glume ih MCU zvijezda Jonathan Majors i Glen Powell iz Top Guna.
-</description>
-        <original_title>Devotion</original_title>
-        <duration>138</duration>
-        <year_of_release>2022</year_of_release>
-        <genre>ratni</genre>
-        <poster>assets\91c0c955-9cb1-4cd0-955f-4e7857083109.jpg</poster>
-        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/na-krilima-casti/8402/20230606</link>
-        <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
-        <trailer>DEVOTION_HR_novi.mp4</trailer>
-        <directors>
-            <director>
-                <id>300</id>
-                <firstname>J.D.</firstname>
-                <lastname>Dillard</lastname>
-            </director>
-        </directors>
-        <actors>
-            <actor>
-                <id>652</id>
-                <firstname>Glen</firstname>
-                <lastname>Powell</lastname>
-            </actor>
-            <actor>
-                <id>660</id>
-                <firstname>Jonathan</firstname>
-                <lastname>Majors</lastname>
-            </actor>
-            <actor>
-                <id>667</id>
-                <firstname>Serinda</firstname>
-                <lastname>Swan</lastname>
-            </actor>
-        </actors>
-    </movie>
-    <movie>
-        <id>155</id>
+        <id>6</id>
         <title>Elementi - sink</title>
         <published_date>2023-06-14T22:00:00</published_date>
         <description>Nova maštovita animacija studija Disney i Pixar koja govori o različitostima i njihovoj privlačnosti.
@@ -242,13 +189,13 @@ Radnja filma smještena je u svijet u kojem četiri osnovna elementa vatra, zeml
         <duration>103</duration>
         <year_of_release>2023</year_of_release>
         <genre>animirani</genre>
-        <poster>assets\b09508ad-8ede-456a-8ebe-4ad119112dab.jpg</poster>
+        <poster>assets\0c4fa4a1-d26a-4034-9a43-8fb9de79dd4c.jpg</poster>
         <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/elementi-sink/8591/20230615</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
         <trailer>ELEMENTAL_HR.mp4</trailer>
         <directors>
             <director>
-                <id>294</id>
+                <id>8</id>
                 <firstname>Pete</firstname>
                 <lastname>Docter</lastname>
             </director>
@@ -256,86 +203,137 @@ Radnja filma smještena je u svijet u kojem četiri osnovna elementa vatra, zeml
         <actors/>
     </movie>
     <movie>
-        <id>156</id>
+        <id>7</id>
         <title>Paklene ulice 10</title>
-        <published_date>2023-06-05T22:00:00</published_date>
+        <published_date>2023-06-07T22:00:00</published_date>
         <description>PAKLENE ULICE 10, deseti film istoimene sage, otvara posljednje poglavlje jedne od najpoznatijih i najpopularnijih filmskih franšiza ikada. Sada, u trećoj deceniji postojanja i dalje odiše snagom i okuplja istu glumačku ekipu sa kojom je sve počelo.
 Tokom svojih misija i uprkos nemogućim izgledima, Dom Toreto (Vin Diesel) i njegova porodica nadmudrili su, iznervirali i prestigli svakog neprijatelja koji im se našao na putu. Sada se suočavaju sa najsmrtonosnijim protivnikom do sada: zastrašujućom prijetnjom koja se pojavljuje iz sjenki prošlosti, i koja je, podstaknuta krvnom osvetom, odlučna u namjeri da razbije ovu porodicu i uništi sve i svakoga, koje Dom voli, zauvijek.
 Godine 2011. U Paklenim ulicama 5, Dom i njegova ekipa riješili su se zlog brazilskog šefa narko kartela, Ernana Rejesa, i obezglavili njegovu imperiju na mostu u Rio De Žaneiru. Ono što nisu znali je da je Rejesov sin Dante (Jason Mamoa) svjedočio svemu tome i da je poslednjih 12 godina proveo osmišljavajući plan kako bi Domu naplatio najveću cijenu.
 Danteov plan raspršiće Domovu porodicu, od Los Anđelesa do Rima, od Brazila do Londona i od Portugala do Antarktika. Novi savezi će se iskovati, a stari neprijatelji će se ponovo pojaviti. Ali, sve će se promijeniti kada Dom bude otkrio da je njegov osmogodišnji sin (Leo Abelo Peri) posljednja meta Danteove osvete.
 U režiji Louis Leterriera, film PAKLENE ULICE 10 ponovo je okupio prvobitnu glumačku ekipu koju čine Michelle Rodriguez, Tyrese Gibson, Chris “Ludacris” Bridges, Nathalie Emmanuel, Jordana Brewster,Sung Kang, John Cena, Jason Statham i Scott Eastwood, kao i dobitnice Oskara Helen Mirren i  Charlize Theron.
-U filmu takođe glumi i izvanredna nova glumačka postava, koju predvode dobitnica Oskara Brie Larson u ulozi Tes, odmetnute predstavnice Agencije, Alan Ritchson kao Ejms, novi šef Agencije koji nije blagonaklon ka Domovoj ekipi kao što je to bio njegov prethodnik, gospodin Niko, Daniela Melchior kao Brazilka, učesnica uličnih trka koja ima snažnu vezu sa Domovom prošlošću i legendarna dobitnica Oskara, Rita Moreno, kao Domova i Mijina baka Toreto.
-</description>
+U filmu takođe glumi i izvanredna nova glumačka postava, koju predvode dobitnica Oskara Brie Larson u ulozi Tes, odmetnute predstavnice Agencije, Alan Ritchson kao Ejms, novi šef Agencije koji nije blagonaklon ka Domovoj ekipi kao što je to bio njegov prethodnik, gospodin Niko, Daniela Melchior kao Brazilka, učesnica uličnih trka koja ima snažnu vezu sa Domovom prošlošću i legendarna dobitnica Oskara, Rita Moreno, kao Domova i Mijina baka Toreto.</description>
         <original_title>Fast X</original_title>
-        <duration>140</duration>
+        <duration>137</duration>
         <year_of_release>2023</year_of_release>
         <genre>akcija</genre>
-        <poster>assets\b0e036b8-8e84-49c1-98b2-0672b0b4dbbb.jpg</poster>
-        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/paklene-ulice-10/8698/20230606</link>
+        <poster>assets\9f074e83-18d3-44b9-9e3f-a01c483806bd.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/paklene-ulice-10/8698/20230608</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
         <trailer>FAST X BiH.mp4</trailer>
         <directors>
             <director>
-                <id>303</id>
+                <id>15</id>
                 <firstname>Louis</firstname>
                 <lastname>Leterrier</lastname>
+            </director>
+            <director>
+                <id>7</id>
+                <firstname>David</firstname>
+                <lastname>Alaux</lastname>
             </director>
         </directors>
         <actors>
             <actor>
-                <id>637</id>
+                <id>8</id>
                 <firstname>Vin</firstname>
                 <lastname>Diesel</lastname>
             </actor>
             <actor>
-                <id>646</id>
+                <id>19</id>
                 <firstname>Michelle</firstname>
                 <lastname>Rodriguez</lastname>
             </actor>
             <actor>
-                <id>638</id>
+                <id>9</id>
                 <firstname>Tyrese</firstname>
                 <lastname>Gibson</lastname>
             </actor>
             <actor>
-                <id>670</id>
-                <firstname>Chris</firstname>
-                <lastname>“Ludacris” Bridges</lastname>
-            </actor>
-            <actor>
-                <id>662</id>
+                <id>39</id>
                 <firstname>Jason</firstname>
                 <lastname>Momoa</lastname>
             </actor>
             <actor>
-                <id>668</id>
+                <id>44</id>
                 <firstname>Nathalie</firstname>
                 <lastname>Emmanuel</lastname>
             </actor>
             <actor>
-                <id>657</id>
+                <id>31</id>
                 <firstname>Jordana</firstname>
                 <lastname>Brewster</lastname>
             </actor>
             <actor>
-                <id>650</id>
+                <id>23</id>
                 <firstname>John</firstname>
                 <lastname>Cena</lastname>
             </actor>
             <actor>
-                <id>631</id>
+                <id>1</id>
                 <firstname>Jason</firstname>
                 <lastname>Statham</lastname>
             </actor>
             <actor>
-                <id>658</id>
+                <id>32</id>
                 <firstname>Sung</firstname>
                 <lastname>Kang</lastname>
             </actor>
         </actors>
     </movie>
     <movie>
-        <id>157</id>
+        <id>8</id>
+        <title>Sisu</title>
+        <published_date>2023-06-07T22:00:00</published_date>
+        <description>Tijekom posljednjih očajničkih dana Drugog svjetskog rata, usamljeni tragač zlata (Jorma Tommila) susreće se s nacistima u akciji spaljivanja zemlje pri povlačenju u sjevernoj Finskoj. Kada mu nacisti ukradu zlato ubrzo shvaćaju da nije riječ o običnom rudaru. Iako ne postoji doslovni prijevod finske riječi “sisu”, ovaj bivši komandos će utjeloviti što sisu predstavlja: suludu hrabrost i odlučnost u suočavanju s naizgled nemogućim izazovom. I bez obzira na prepreke koje nacisti stavljaju pred njega, on će ići do kraja kako bi vratio svoje zlato – čak i ako to znači ubijanje svakog nacista koji mu se nađe na putu.
+ 
+
+ 
+</description>
+        <original_title>Sisu</original_title>
+        <duration>91</duration>
+        <year_of_release>2022</year_of_release>
+        <genre>akcija</genre>
+        <poster>assets\ebaa35eb-2676-46ee-b8b7-667487388db7.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/sisu/8800/20230608</link>
+        <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
+        <trailer>SISU_HR.mp4</trailer>
+        <directors>
+            <director>
+                <id>6</id>
+                <firstname>Jalmari</firstname>
+                <lastname>Helander</lastname>
+            </director>
+        </directors>
+        <actors>
+            <actor>
+                <id>25</id>
+                <firstname>Jorma</firstname>
+                <lastname>Tommila</lastname>
+            </actor>
+            <actor>
+                <id>36</id>
+                <firstname>Aksel</firstname>
+                <lastname>Hennie</lastname>
+            </actor>
+            <actor>
+                <id>15</id>
+                <firstname>Jack</firstname>
+                <lastname>Doolan</lastname>
+            </actor>
+            <actor>
+                <id>12</id>
+                <firstname>Mimosa</firstname>
+                <lastname>Willamo</lastname>
+            </actor>
+            <actor>
+                <id>33</id>
+                <firstname>Onni</firstname>
+                <lastname>Tommila</lastname>
+            </actor>
+        </actors>
+    </movie>
+    <movie>
+        <id>9</id>
         <title>The Flash</title>
         <published_date>2023-06-13T22:00:00</published_date>
         <description>Omiljeni član Lige pravde, The Flash, ovog ljeta dobiva svoj prvi samostalni film, u režiji Andyja Muschiettija, s Ezrom Millerom koji će ponoviti svoju kultnu ulogu vodećeg DC heroja. Da nas očekuje prava ljetna akcijska poslastica dokazuje i činjenica da će u novom film veliku ulogu imati i po mnogima najbolji Batman svih vremena - Michael Keaton.
@@ -343,107 +341,118 @@ U filmu takođe glumi i izvanredna nova glumačka postava, koju predvode dobitni
 Svjetovi se sudaraju u dok Barry Allen koristi svoje supermoći za putovanje kroz vrijeme kako bi promijenio događaje iz svoje prošlosti. Međutim, pokušaj da spasi svoju obitelj nenamjerno ga okreće u budućnost, ostavljajući Barryja zarobljenog u okrutnoj sadašnjosti u koju se general Zod vratio s prijetnjom uništenja, a Barry nema drugih superheroja koji bi mu priskočili u pomoć. Osim ako ne uspije izmamiti sasvim drugačijeg Batmana iz mirovine i spasiti zatočenog Kriptonca iz zatočeništva, iako ne onog kojeg traži. U konačnici, Barryjeva jedina nada da spasi svijet u kojem se našao i vrati u budućnost koju poznaje jest utrka s vlastitim životom. Ali hoće li konačna žrtva biti dovoljna da se uspostavi red u svemiru?
 </description>
         <original_title>The Flash</original_title>
-        <duration>133</duration>
+        <duration>144</duration>
         <year_of_release>2023</year_of_release>
         <genre>akcija, avantura</genre>
-        <poster>assets\daf194c5-f107-4ee4-a0e5-8ad5e1db931d.jpg</poster>
+        <poster>assets\f1dc61f9-d2bf-4c3c-aae3-5321e02c6cc4.jpg</poster>
         <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/the-flash/8662/20230614</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
         <trailer>FLASH_HR.mp4</trailer>
         <directors>
             <director>
-                <id>306</id>
+                <id>18</id>
                 <firstname>Andy</firstname>
                 <lastname>Muschietti</lastname>
             </director>
         </directors>
         <actors>
             <actor>
-                <id>663</id>
+                <id>40</id>
                 <firstname>Ezra</firstname>
                 <lastname>Miller</lastname>
             </actor>
             <actor>
-                <id>661</id>
+                <id>37</id>
                 <firstname>Michael</firstname>
                 <lastname>Keaton</lastname>
             </actor>
             <actor>
-                <id>640</id>
+                <id>13</id>
                 <firstname>Sasha</firstname>
                 <lastname>Calle</lastname>
             </actor>
             <actor>
-                <id>643</id>
+                <id>16</id>
                 <firstname>Ben</firstname>
                 <lastname>Affleck</lastname>
             </actor>
             <actor>
-                <id>633</id>
+                <id>4</id>
                 <firstname>Kiersey</firstname>
                 <lastname>Clemons</lastname>
             </actor>
             <actor>
-                <id>655</id>
+                <id>29</id>
                 <firstname>Antje</firstname>
                 <lastname>Traue</lastname>
             </actor>
             <actor>
-                <id>671</id>
+                <id>47</id>
                 <firstname>Michael</firstname>
                 <lastname>Shannon</lastname>
             </actor>
         </actors>
     </movie>
     <movie>
-        <id>158</id>
+        <id>10</id>
         <title>Drevna mišologija - sink</title>
-        <published_date>2023-06-05T22:00:00</published_date>
-        <description>Na daleki put u drevnu Grčku vodi nas mlada i pametna mišica Pattie koja je oduvijek željela postati heroina. Pattie, uz mačka Sama, starog heroja Jasona i Argonaute, kreće u odvažnu potragu kako bi stanovnicima Yolcosa pružila pomoć u izradi kipa grčkog boga mora - Posejdona. Yolcos krasi spomenik Zeusu, ali ne i Posejdonu, što u njemu stvara strašnu ljubomoru koja prelazi u bijes. U žaru ljutnje Posejdon stanovnicima Yolcosa oduzima zlatno runo, koje im osigurava sretan i lagodan život, dajući im rok do kojeg moraju izgraditi i njegov spomenik. U pustolovini života hrabra se mišica suočava s najbizarnijim i najopasnijim stvorenjima iz doba mitologije. </description>
+        <published_date>2023-06-09T22:00:00</published_date>
+        <description>Na daleki put u drevnu Grčku vodi nas mlada i pametna mišica Pattie koja je oduvijek željela postati heroina. Pattie, uz mačka Sama, starog heroja Jasona i Argonaute, kreće u odvažnu potragu kako bi stanovnicima Yolcosa pružila pomoć u izradi kipa grčkog boga mora - Posejdona. Yolcos krasi spomenik Zeusu, ali ne i Posejdonu, što u njemu stvara strašnu ljubomoru koja prelazi u bijes. U žaru ljutnje Posejdon stanovnicima Yolcosa oduzima zlatno runo, koje im osigurava sretan i lagodan život, dajući im rok do kojeg moraju izgraditi i njegov spomenik. U pustolovini života hrabra se mišica suočava s najbizarnijim i najopasnijim stvorenjima iz doba mitologije. 
+</description>
         <original_title>Argonauts</original_title>
         <duration>95</duration>
         <year_of_release>2022</year_of_release>
         <genre>animirani</genre>
-        <poster>assets\2912337f-3f19-4b4d-9c66-810582e89e59.jpg</poster>
-        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/drevna-misologija-sink/8721/20230606</link>
+        <poster>assets\5dd40482-40e8-40de-a33c-f76a5365c662.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/drevna-misologija-sink/8721/20230610</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
         <trailer>ARGONUTS_HR.mp4</trailer>
         <directors>
             <director>
-                <id>302</id>
+                <id>7</id>
+                <firstname>David</firstname>
+                <lastname>Alaux</lastname>
+            </director>
+            <director>
+                <id>14</id>
                 <firstname>Eric</firstname>
+                <lastname>Tosti</lastname>
+            </director>
+            <director>
+                <id>17</id>
+                <firstname>Jean-Francois</firstname>
                 <lastname>Tosti</lastname>
             </director>
         </directors>
         <actors/>
     </movie>
     <movie>
-        <id>159</id>
+        <id>11</id>
         <title>Spider-Man: Putovanje kroz Spider-svijet - sink</title>
-        <published_date>2023-06-05T22:00:00</published_date>
+        <published_date>2023-06-07T22:00:00</published_date>
         <description>Miles Morales vraća se za sljedeće poglavlje Oscarom nagrađivane Spider-svijet sage, SPIDER-MAN™: Putovanje kroz Spider-svijet. Nakon ponovnog ujedinjenja s Gwen Stacy, Brooklynov prijateljski nastrojeni Spider-Man iz susjedstva katapultira se preko Multiverzuma, gdje susreće tim Spider-ljudi zaduženih za zaštitu njegovog postojanja. Ali kada se heroji sukobe oko toga kako se nositi s novom prijetnjom, Miles se nađe suprotstavljen drugim Spiderima i mora redefinirati što znači biti heroj kako bi mogao spasiti ljude koje najviše voli.
 </description>
         <original_title>Spider-Man: Across the Spider-Verse</original_title>
         <duration>139</duration>
         <year_of_release>2023</year_of_release>
         <genre>animirani</genre>
-        <poster>assets\ac5b962e-382b-4da1-9fd2-f6ef2546a5d9.jpg</poster>
-        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/spider-man-putovanje-kroz-spider-svijet-sink/8771/20230606</link>
+        <poster>assets\18ea687a-7d63-4f78-a3d2-027dc49ae5e6.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/spider-man-putovanje-kroz-spider-svijet-sink/8771/20230608</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
         <trailer>Spiderman_Across_HR_sink.mp4</trailer>
         <directors>
             <director>
-                <id>295</id>
+                <id>9</id>
                 <firstname>Joaquim</firstname>
                 <lastname>Dos Santos</lastname>
             </director>
             <director>
-                <id>308</id>
+                <id>21</id>
                 <firstname>Kemp</firstname>
                 <lastname>Powers</lastname>
             </director>
             <director>
-                <id>304</id>
+                <id>16</id>
                 <firstname>Justin</firstname>
                 <lastname>K. Thompson</lastname>
             </director>
@@ -451,9 +460,37 @@ Svjetovi se sudaraju u dok Barry Allen koristi svoje supermoći za putovanje kro
         <actors/>
     </movie>
     <movie>
-        <id>160</id>
+        <id>12</id>
+        <title>Super Mario Braća Film - sink</title>
+        <published_date>2023-06-09T22:00:00</published_date>
+        <description>Nintendo i Ilumination  predstavljaju nam novi animirani film inspirisan svijetom Super Maria.
+Reditelji filma su Aaron Horvath i Michael Jelenic, koji su zajedno radili na filmovima Teen Titans Go!, Teen Titans Go! To the Movies, a scenarista je Matthew Fogel (Lego film 2, Malci 2 – Gruov početak). Glasove likovima u originalnoj verziji filma pozajmili su Chris Pratt (Mario), Anya Taylor-Joy, Charlie Day, Jack Black, Keegan-Michael Key, Seth Rogen, Fred Armisen, Kevin Michael Richardson, Sebastian Maniscalco.</description>
+        <original_title>The Super Mario Bros. Movie</original_title>
+        <duration>92</duration>
+        <year_of_release>2023</year_of_release>
+        <genre>animirani</genre>
+        <poster>assets\4bb89ba2-2424-43d0-b655-1ed2728c7aeb.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/super-mario-braca-film-sink/8640/20230610</link>
+        <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
+        <trailer>SUPER_MARIO_HR.mp4</trailer>
+        <directors>
+            <director>
+                <id>3</id>
+                <firstname>Aaron</firstname>
+                <lastname>Horvath</lastname>
+            </director>
+            <director>
+                <id>2</id>
+                <firstname>Michael</firstname>
+                <lastname>Jelenic</lastname>
+            </director>
+        </directors>
+        <actors/>
+    </movie>
+    <movie>
+        <id>13</id>
         <title>Boogeyman</title>
-        <published_date>2023-06-05T22:00:00</published_date>
+        <published_date>2023-06-07T22:00:00</published_date>
         <description>Napeta adaptacija istoimene kratke priče slavnog Stephena Kinga koja će vam utjerati strah u kosti i zbog koje biste mogli provjeravati ima li čudovišta ispod kreveta ili se možda krije u ormaru?!
 Priča prati srednjoškolku Sadie i njezinu mlađu sestru Sawyer koje se oporavljaju od tragične smrti majke. Njihov otac radi kao terapeut i nastoji ne razmišljati o tragediji koja ih je zadesila.
 Kada se njegov očajni pacijent neočekivano pojavi u njihovom domu tražeći pomoć, za sobom ostavlja zastrašujući nadnaravni entitet koji radi plijen od obitelji i hrani se patnjom svojih žrtava.
@@ -464,62 +501,128 @@ Sadie i Sawyer ubrzo shvate da ih opsjeda sadistička prisutnost u vlastitoj ku�
         <duration>98</duration>
         <year_of_release>2023</year_of_release>
         <genre>horor</genre>
-        <poster>assets\c185f9f7-ab05-4f3b-ab16-0b4cda742fd2.jpg</poster>
-        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/boogeyman/8723/20230606</link>
+        <poster>assets\b2000ead-d5bb-4b85-88bc-c14182e7746d.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/boogeyman/8723/20230608</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
         <trailer>BOOGEYMAN_HR.mp4</trailer>
         <directors>
             <director>
-                <id>307</id>
+                <id>19</id>
                 <firstname>Rob</firstname>
                 <lastname>Savage</lastname>
             </director>
         </directors>
         <actors>
             <actor>
-                <id>666</id>
+                <id>43</id>
                 <firstname>Chris</firstname>
                 <lastname>Messina</lastname>
             </actor>
             <actor>
-                <id>656</id>
+                <id>30</id>
                 <firstname>Vivien</firstname>
                 <lastname>Lyra Blair</lastname>
             </actor>
             <actor>
-                <id>664</id>
+                <id>41</id>
                 <firstname>Sophie</firstname>
                 <lastname>Thatcher</lastname>
             </actor>
         </actors>
     </movie>
     <movie>
-        <id>162</id>
-        <title>Suzume</title>
-        <published_date>2023-06-05T22:00:00</published_date>
-        <description>Tinejdžerica Suzume slučajno otvori neobična vrata smještena u zaboravljenom mjestu blizu svojeg grada na otoku Kyushu. Ubrzo nakon toga, Suzume počne primjećivati neobične prizore prije nego grad pogodi manji potres. Nakon povratka do mjesta gdje je otvorila vrata, ona upoznaje misterioznog mladića, člana Čuvara, čiji je zadatak putovati diljem Japana i čuvati portale koji vode u svijet iza vrata. U svijet koji skriva veliku tajnu iz djetinjstva djevojke Suzume. I opasnost za cijeli Japan.
+        <id>15</id>
+        <title>Transformers: Uspon zvijeri</title>
+        <published_date>2023-06-07T22:00:00</published_date>
+        <description>Vraćajući se akciji i spektaklu koji su oduševili fanove širom svijeta, film TRANSFORMERSI: BUĐENJE ZVIJERI odvešće kino publiku u jedinstvenu avanturu iz devedesetih godina u kojoj ćemo, pored Autobota upoznati i potpuno novu vrstu Transformersa – Maksimale. Nova vrsta postaće dio već postojeće bitke na Zemlji, koja se vodi između Autobota i Deseptikona.
 </description>
-        <original_title>Suzume no tojimari</original_title>
-        <duration>122</duration>
-        <year_of_release>2022</year_of_release>
-        <genre>anime</genre>
-        <poster>assets\699d64da-3b1a-452a-ad46-dbf56a9fd6b3.jpg</poster>
-        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/suzume/8792/20230606</link>
+        <original_title>Transformers: Rise of the Beasts</original_title>
+        <duration>127</duration>
+        <year_of_release>2023</year_of_release>
+        <genre>akcija, avantura</genre>
+        <poster>assets\2615cb41-0e8a-453a-b0ce-be01027eeaa1.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/transformers-uspon-zvijeri/8730/20230608</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
-        <trailer>SUZUME_HR.mp4</trailer>
+        <trailer>TRANSFORMERS RISE OF BEASTS BiH.mp4</trailer>
         <directors>
             <director>
-                <id>301</id>
-                <firstname>Makoto</firstname>
-                <lastname>Shinkai</lastname>
+                <id>13</id>
+                <firstname>Steven</firstname>
+                <lastname>Caple Jr.</lastname>
             </director>
         </directors>
-        <actors/>
+        <actors>
+            <actor>
+                <id>34</id>
+                <firstname>Anthony</firstname>
+                <lastname>Ramos</lastname>
+            </actor>
+            <actor>
+                <id>24</id>
+                <firstname>Dominique</firstname>
+                <lastname>Fishback</lastname>
+            </actor>
+            <actor>
+                <id>3</id>
+                <firstname>Tobe</firstname>
+                <lastname>Nwigwe</lastname>
+            </actor>
+            <actor>
+                <id>26</id>
+                <firstname>Peter</firstname>
+                <lastname>Cullen</lastname>
+            </actor>
+            <actor>
+                <id>21</id>
+                <firstname>Ron</firstname>
+                <lastname>Perlman</lastname>
+            </actor>
+            <actor>
+                <id>38</id>
+                <firstname>Peter</firstname>
+                <lastname>Dinklage</lastname>
+            </actor>
+            <actor>
+                <id>11</id>
+                <firstname>Michelle</firstname>
+                <lastname>Yeoh</lastname>
+            </actor>
+        </actors>
     </movie>
     <movie>
-        <id>163</id>
+        <id>16</id>
+        <title>Mavka: Čuvarica šume - sink</title>
+        <published_date>2023-06-09T22:00:00</published_date>
+        <description>Ovo je priča o magičnoj moći ljubavi. Ljubavi koja ljudima omogućuje otkriti i pronaći sposobnosti i kvalitete koje ih osnažuju, kako bi dosegli sve što je moguće i suprotstavili se zlu i ljudskom poroku.
+
+Od pamtivijeka su nepregledne ukrajinske šume skrivale bezbrojne tajne i nedokučive misterije. Te su šume dom čudesnih mitskih bića koja žive među drevnim drvećem, vjerno čuvajući svoje sveto kraljevstvo. Mavka je duša šume i njezina novoizabrana čuvarica. Njezina primarna misija je zaštititi šumu i njezino sveto srce — sam Izvor života — od bilo kakve agresije ili napada, uključujući i one od strane ljudi. Lukas je skromni seoski dječak koji jako voli glazbu i svoj talent pretače u sviranje svoje drvene frule te sanja o tome da cijeli život posveti toj svojoj strasti. Mavka i Lukas se upoznaju i zaljubljuju. Hoće li se njihova dva svijeta moći ujediniti protiv zla?</description>
+        <original_title>Mavka</original_title>
+        <duration>99</duration>
+        <year_of_release>2023</year_of_release>
+        <genre>animirani</genre>
+        <poster>assets\657836f4-f931-4123-8c7e-0a53d1557a85.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/mavka-cuvarica-sume-sink/8573/20230610</link>
+        <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
+        <trailer>MAVKA_HR.mp4</trailer>
+        <directors>
+            <director>
+                <id>20</id>
+                <firstname>Oleg</firstname>
+                <lastname>Malamuz</lastname>
+            </director>
+        </directors>
+        <actors>
+            <actor>
+                <id>2</id>
+                <firstname>Alice</firstname>
+                <lastname>Braga</lastname>
+            </actor>
+        </actors>
+    </movie>
+    <movie>
+        <id>17</id>
         <title>Hipnotiziran</title>
-        <published_date>2023-06-05T22:00:00</published_date>
+        <published_date>2023-06-07T22:00:00</published_date>
         <description>Napeti akcijski triler redatelja Roberta Rodrigueza koji je film opisao kao „Hitchcockov triler na steroidima“  s Benom Affleckom u glavnoj ulozi.
 Priča prati policijskog detektiva Dannyja Rourkea koji traži svoju nestalu kćer Minnie. Potraga će ga dovesti do saznanja da je njezin nestanak povezan sa serijom pljački koje predvodi tajanstveni muškarac s hipnotičkim moćima (William Fichtner). U namjeri da pronađe svoju nestalu kćer, Rourke sve više tone u nepoznato dok istražuje niz pljački banaka koje mijenjaju stvarnost, i koje će na kraju dovesti u pitanje najosnovnije pretpostavke o svemu i svima koji čine njegov svijet. Uz pomoć Diane Cruz (Alice Braga), nevjerojatno nadarene vidovnjakinje, traži tajanstvenog čovjeka za kojeg vjeruje da drži ključ pronalaska nestale djevojke.
 </description>
@@ -527,45 +630,45 @@ Priča prati policijskog detektiva Dannyja Rourkea koji traži svoju nestalu kć
         <duration>94</duration>
         <year_of_release>2023</year_of_release>
         <genre>SF, triler</genre>
-        <poster>assets\49ceef4e-cac8-446f-a07c-2be7e60ab9c3.jpg</poster>
-        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/hipnotiziran/8774/20230606</link>
+        <poster>assets\4d790d03-5bb4-41e3-a419-86a16d2d0882.jpg</poster>
+        <link>https://www.blitz-cinestar-bh.ba/cinestar-mostar/hipnotiziran/8774/20230608</link>
         <reservation>https://karte.cinestarcinemas.ba/WebTicketNet/?coid=40000000014AKFBLFD</reservation>
         <trailer>HYPNOTIC_HR.mp4</trailer>
         <directors>
             <director>
-                <id>296</id>
+                <id>10</id>
                 <firstname>Robert</firstname>
                 <lastname>Rodriguez</lastname>
             </director>
         </directors>
         <actors>
             <actor>
-                <id>643</id>
+                <id>16</id>
                 <firstname>Ben</firstname>
                 <lastname>Affleck</lastname>
             </actor>
             <actor>
-                <id>632</id>
+                <id>2</id>
                 <firstname>Alice</firstname>
                 <lastname>Braga</lastname>
             </actor>
             <actor>
-                <id>669</id>
+                <id>45</id>
                 <firstname>J.</firstname>
                 <lastname>D. Pardo</lastname>
             </actor>
             <actor>
-                <id>648</id>
+                <id>22</id>
                 <firstname>Jeff</firstname>
                 <lastname>Fahey</lastname>
             </actor>
             <actor>
-                <id>647</id>
+                <id>20</id>
                 <firstname>Jackie</firstname>
                 <lastname>Earle Haley</lastname>
             </actor>
             <actor>
-                <id>659</id>
+                <id>35</id>
                 <firstname>William</firstname>
                 <lastname>Fichtner</lastname>
             </actor>
