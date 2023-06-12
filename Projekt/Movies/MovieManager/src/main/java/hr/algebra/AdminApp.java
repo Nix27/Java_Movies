@@ -145,7 +145,6 @@ public class AdminApp extends javax.swing.JFrame {
     private void init() {
         try {
             movieService = new MovieService();
-
             loadModel();
             changeButtonsEnableProperty();
         } catch (Exception ex) {
